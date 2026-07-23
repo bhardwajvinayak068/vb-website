@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export function Headline() {
   return (
@@ -11,7 +12,12 @@ export function Headline() {
         for local businesses that want more calls, more DMs, and less manual
         work.
       </p>
-      <Button className="mt-8">Start a project</Button>
+      <a
+        href="mailto:bhardwajvinayak068@gmail.com"
+        className={cn('mt-8', buttonVariants({ variant: 'primary' }))}
+      >
+        Start a project
+      </a>
       <p className="mt-10 font-mono text-[11px] uppercase tracking-wide text-text-low">
         10+ years on high-rise safety-critical sites
       </p>
