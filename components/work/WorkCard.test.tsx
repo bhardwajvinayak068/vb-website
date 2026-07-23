@@ -15,6 +15,7 @@ describe('WorkCard', () => {
     const { container } = render(<WorkCard title="Website Design" />)
     const card = container.firstChild as HTMLElement
     expect(card).toHaveClass('border-dashed')
+    expect(card).not.toHaveClass('bg-concrete')
   })
 
   it('has no accent-color underline (not real, populated content)', () => {
