@@ -24,4 +24,21 @@ describe('Home', () => {
       screen.getByText('EN / MY / ZH / TA — MULTILINGUAL ON SITE')
     ).toBeInTheDocument()
   })
+
+  it('renders Nav and Footer around the hero', () => {
+    render(<Home />)
+    expect(screen.getByText('VB')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /whatsapp/i })).toHaveAttribute(
+      'href',
+      'https://wa.me/60182302045'
+    )
+  })
+
+  it('gives the Services nav link a real #services anchor target', () => {
+    const { container } = render(<Home />)
+    expect(
+      screen.getByRole('link', { name: /^services$/i })
+    ).toHaveAttribute('href', '#services')
+    expect(container.querySelector('#services')).not.toBeNull()
+  })
 })
