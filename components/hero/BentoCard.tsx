@@ -38,7 +38,7 @@ export function BentoCard({ accent, title, children }: BentoCardProps) {
         data-testid="accent-underline"
         className={`mb-3 h-1 w-10 rounded-full ${accentClass}`}
       />
-      <h3 className="font-display text-lg uppercase text-text-hi">{title}</h3>
+      <h2 className="font-display text-lg uppercase text-text-hi">{title}</h2>
       <div className="mt-2 font-mono text-xs text-text-mid">{children}</div>
     </motion.div>
   )

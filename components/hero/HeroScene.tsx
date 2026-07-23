@@ -5,20 +5,21 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Html, RoundedBox } from '@react-three/drei'
 import type * as THREE from 'three'
 import { supportsWebGL } from '@/lib/supportsWebGL'
+import { colors } from '@/lib/tokens'
 
 function Centerpiece() {
   const ref = useRef<THREE.Mesh>(null)
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!ref.current) return
-    ref.current.rotation.y += 0.003
+    ref.current.rotation.y += delta * 0.18
     ref.current.position.y = Math.sin(state.clock.elapsedTime) * 0.15
   })
 
   return (
     <group>
       <RoundedBox ref={ref} args={[2, 1.2, 0.2]} radius={0.08} smoothness={4}>
-        <meshStandardMaterial color="#8B98AC" metalness={0.7} roughness={0.25} />
+        <meshStandardMaterial color={colors.textMid} metalness={0.7} roughness={0.25} />
       </RoundedBox>
       <Html position={[1.4, 0.6, 0]} distanceFactor={8} occlude>
         <div className="whitespace-nowrap border-l border-text-low pl-2 font-mono text-[10px] uppercase text-text-mid">
@@ -47,7 +48,7 @@ function LoosePrimitives() {
           ) : (
             <icosahedronGeometry args={[0.2, 0]} />
           )}
-          <meshStandardMaterial color="#141C29" metalness={0.3} roughness={0.6} />
+          <meshStandardMaterial color={colors.concreteDeep} metalness={0.3} roughness={0.6} />
         </mesh>
       ))}
     </>
@@ -78,7 +79,7 @@ export function HeroScene() {
     <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
       <ambientLight intensity={0.4} />
       <directionalLight position={[3, 3, 4]} intensity={1.1} />
-      <directionalLight position={[-3, -1, -2]} intensity={0.3} color="#2ECC8F" />
+      <directionalLight position={[-3, -1, -2]} intensity={0.3} color={colors.terminalGreen} />
       <Centerpiece />
       <LoosePrimitives />
       <Suspense fallback={null}>

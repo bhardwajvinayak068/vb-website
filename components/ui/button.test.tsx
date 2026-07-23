@@ -1,10 +1,8 @@
-import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
 import { Button } from './button'
 
 describe('Button', () => {
-  afterEach(() => cleanup())
-
   it('renders its label', () => {
     render(<Button>Start a project</Button>)
     expect(screen.getByText('Start a project')).toBeInTheDocument()

@@ -109,7 +109,7 @@ Single `Canvas`, one shared lighting rig (soft key + rim light) so every object 
 - Any section below the hero (bento-grid-of-services page, case studies, footer, etc.)
 - Photoreal hard-hat / scroll 3D renders (needs external 3D tooling)
 - Any fabricated stats/numbers — none exist yet for this venture
-- Git init / commit (deferred until the user says the project is ready)
+- Publishing to a remote / pushing anywhere — git itself was initialized local-only partway through the build (see the plan's Global Constraints) so subagent-driven review could diff each task; history stays local until the user finalizes it
 
 ## 10. Verification plan
 
