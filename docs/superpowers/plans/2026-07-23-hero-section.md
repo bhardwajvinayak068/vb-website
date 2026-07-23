@@ -989,9 +989,9 @@ export function HeroScene() {
       <ambientLight intensity={0.4} />
       <directionalLight position={[3, 3, 4]} intensity={1.1} />
       <directionalLight position={[-3, -1, -2]} intensity={0.3} color="#2ECC8F" />
+      <Centerpiece />
+      <LoosePrimitives />
       <Suspense fallback={null}>
-        <Centerpiece />
-        <LoosePrimitives />
         <Environment preset="city" />
       </Suspense>
     </Canvas>
