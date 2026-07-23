@@ -10,6 +10,7 @@ describe('design tokens', () => {
   })
 
   it('wires every token into the tailwind theme', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const themeColors = (tailwindConfig.theme as any).extend.colors
     expect(themeColors['slate-base']).toBe(colors.slateBase)
     expect(themeColors['safety-amber']).toBe(colors.safetyAmber)
