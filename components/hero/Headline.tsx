@@ -4,10 +4,10 @@ import { cn } from '@/lib/utils'
 export function Headline() {
   return (
     <div className="max-w-xl">
-      <h1 className="font-display text-5xl uppercase leading-[1.05] tracking-tight text-text-hi md:text-6xl">
+      <h1 className="font-display text-6xl uppercase leading-[0.95] tracking-tight text-text-hi md:text-7xl">
         Websites and AI systems built for local business growth
       </h1>
-      <p className="mt-5 text-base text-text-mid">
+      <p className="mt-6 max-w-md text-sm text-text-mid">
         Sites, social ads, short-form content, and automation — built and run
         for local businesses that want more calls, more DMs, and less manual
         work.

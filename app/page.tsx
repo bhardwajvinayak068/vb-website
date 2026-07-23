@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main className="relative min-h-screen overflow-hidden bg-slate-base px-6 py-16 md:px-16 md:py-24">
+      <main className="bg-blueprint-grid relative min-h-screen overflow-hidden bg-slate-base px-6 py-16 md:px-16 md:py-24">
         <motion.div
           variants={container}
           initial="hidden"
@@ -44,7 +44,7 @@ export default function Home() {
             <motion.div variants={item}>
               <Headline />
             </motion.div>
-            <motion.div variants={item} className="h-72 md:h-96">
+            <motion.div variants={item} className="h-80 md:h-[32rem]">
               <HeroScene />
             </motion.div>
           </div>

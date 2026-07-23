@@ -7,9 +7,15 @@ interface BentoCardProps {
   accent: 'amber' | 'green'
   title: string
   children: ReactNode
+  featured?: boolean
 }
 
-export function BentoCard({ accent, title, children }: BentoCardProps) {
+export function BentoCard({
+  accent,
+  title,
+  children,
+  featured = false,
+}: BentoCardProps) {
   const [rotate, setRotate] = useState({ x: 0, y: 0 })
 
   function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
@@ -32,14 +38,20 @@ export function BentoCard({ accent, title, children }: BentoCardProps) {
       animate={{ rotateX: rotate.x, rotateY: rotate.y }}
       transition={{ type: 'spring', stiffness: 150, damping: 15 }}
       style={{ transformPerspective: 800 }}
-      className="rounded-2xl bg-concrete p-5"
+      className={`rounded-2xl bg-concrete ${featured ? 'p-8' : 'p-5'}`}
     >
       <div
         data-testid="accent-underline"
-        className={`mb-3 h-1 w-10 rounded-full ${accentClass}`}
+        className={`mb-3 h-1 rounded-full ${featured ? 'w-16' : 'w-10'} ${accentClass}`}
       />
-      <h2 className="font-display text-lg uppercase text-text-hi">{title}</h2>
-      <div className="mt-2 text-xs text-text-mid">{children}</div>
+      <h2
+        className={`font-display uppercase text-text-hi ${featured ? 'text-3xl' : 'text-lg'}`}
+      >
+        {title}
+      </h2>
+      <div className={`mt-2 text-text-mid ${featured ? 'text-sm' : 'text-xs'}`}>
+        {children}
+      </div>
     </motion.div>
   )
 }

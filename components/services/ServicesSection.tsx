@@ -89,21 +89,39 @@ const SERVICES: Array<{
 const container = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.12 },
   },
 }
 
-const item = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const
+
+const itemFromLeft = {
+  hidden: { opacity: 0, x: -32 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE_OUT_EXPO } },
+}
+
+const itemFromRight = {
+  hidden: { opacity: 0, x: 32 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE_OUT_EXPO } },
+}
+
+const itemCenter = {
+  hidden: { opacity: 0, scale: 0.96 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: EASE_OUT_EXPO } },
 }
 
 export function ServicesSection() {
   return (
     <section id="services" className="bg-slate-base px-6 py-16 md:px-16 md:py-24">
-      <h2 className="font-display text-3xl uppercase tracking-tight text-text-hi md:text-4xl">
+      <motion.h2
+        initial={{ opacity: 0, x: -16 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ duration: 0.5 }}
+        className="font-display text-3xl uppercase tracking-tight text-text-hi md:text-4xl"
+      >
         What I Do
-      </h2>
+      </motion.h2>
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -113,10 +131,15 @@ export function ServicesSection() {
       >
         {SERVICES.map((service, index) => {
           const isLast = index === SERVICES.length - 1
+          const variants = isLast
+            ? itemCenter
+            : index % 2 === 0
+              ? itemFromLeft
+              : itemFromRight
           return (
             <motion.div
               key={service.title}
-              variants={item}
+              variants={variants}
               className={isLast ? 'md:col-span-2' : undefined}
             >
               <ServiceCard {...service} />
