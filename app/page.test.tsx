@@ -53,4 +53,17 @@ describe('Home', () => {
       screen.getByRole('heading', { name: 'Agentic AI Systems' })
     ).toBeInTheDocument()
   })
+
+  it('renders the placeholder work section between services and footer', () => {
+    const { container } = render(<Home />)
+    expect(container.querySelector('#work')).not.toBeNull()
+    expect(
+      screen.getByRole('heading', { name: /recent work/i })
+    ).toBeInTheDocument()
+  })
+
+  it('has no fabricated project content in the work section — only pending placeholders', () => {
+    render(<Home />)
+    expect(screen.getAllByText('Case study coming soon.')).toHaveLength(3)
+  })
 })

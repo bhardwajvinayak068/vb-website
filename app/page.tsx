@@ -9,6 +9,7 @@ import { HeroScene } from '@/components/hero/HeroScene'
 import { BentoStack } from '@/components/hero/BentoStack'
 import { FloatingCard } from '@/components/hero/FloatingCard'
 import { ServicesSection } from '@/components/services/ServicesSection'
+import { WorkSection } from '@/components/work/WorkSection'
 
 const container = {
   hidden: {},
@@ -54,6 +55,7 @@ export default function Home() {
         </motion.div>
       </main>
       <ServicesSection />
+      <WorkSection />
       <Footer />
     </>
   )
