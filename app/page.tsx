@@ -8,6 +8,7 @@ import { Headline } from '@/components/hero/Headline'
 import { HeroScene } from '@/components/hero/HeroScene'
 import { BentoStack } from '@/components/hero/BentoStack'
 import { FloatingCard } from '@/components/hero/FloatingCard'
+import { ServicesSection } from '@/components/services/ServicesSection'
 
 const container = {
   hidden: {},
@@ -46,16 +47,13 @@ export default function Home() {
               <HeroScene />
             </motion.div>
           </div>
-          <motion.div
-            id="services"
-            variants={item}
-            className="relative self-start pb-10"
-          >
+          <motion.div variants={item} className="relative self-start pb-10">
             <BentoStack />
             <FloatingCard />
           </motion.div>
         </motion.div>
       </main>
+      <ServicesSection />
       <Footer />
     </>
   )

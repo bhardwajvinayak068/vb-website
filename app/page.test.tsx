@@ -34,11 +34,23 @@ describe('Home', () => {
     )
   })
 
-  it('gives the Services nav link a real #services anchor target', () => {
+  it('gives the Services nav link a real #services anchor target on the new services section', () => {
     const { container } = render(<Home />)
     expect(
       screen.getByRole('link', { name: /^services$/i })
     ).toHaveAttribute('href', '#services')
-    expect(container.querySelector('#services')).not.toBeNull()
+    const servicesEl = container.querySelector('#services')
+    expect(servicesEl).not.toBeNull()
+    expect(servicesEl).toHaveTextContent('What I Do')
+  })
+
+  it('renders the full services section with all seven services', () => {
+    render(<Home />)
+    expect(
+      screen.getByRole('heading', { name: /what i do/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Agentic AI Systems' })
+    ).toBeInTheDocument()
   })
 })
