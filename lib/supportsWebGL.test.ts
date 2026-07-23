@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { supportsWebGL } from './supportsWebGL'
 
 describe('supportsWebGL', () => {
@@ -19,6 +19,7 @@ describe('supportsWebGL', () => {
   it('returns true when a webgl context is available', () => {
     // @ts-expect-error stubbing for test
     window.WebGLRenderingContext = function () {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     HTMLCanvasElement.prototype.getContext = vi.fn(() => ({})) as any
     expect(supportsWebGL()).toBe(true)
   })

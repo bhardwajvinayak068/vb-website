@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Html, RoundedBox } from '@react-three/drei'
 import type * as THREE from 'three'
@@ -55,7 +55,17 @@ function LoosePrimitives() {
 }
 
 export function HeroScene() {
-  if (!supportsWebGL()) {
+  // WebGL support can only be feature-detected in the browser. Defaulting to
+  // the fallback until a post-mount effect confirms otherwise keeps the
+  // server-rendered HTML and the client's first render identical, avoiding a
+  // hydration mismatch (the server has no `window` to check at all).
+  const [webglReady, setWebglReady] = useState(false)
+
+  useEffect(() => {
+    setWebglReady(supportsWebGL())
+  }, [])
+
+  if (!webglReady) {
     return (
       <div
         data-testid="hero-scene-fallback"

@@ -39,7 +39,7 @@ export default function Home() {
             <HeroScene />
           </motion.div>
         </div>
-        <motion.div variants={item} className="relative pb-10">
+        <motion.div variants={item} className="relative self-start pb-10">
           <BentoStack />
           <FloatingCard />
         </motion.div>
