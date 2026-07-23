@@ -40,7 +40,7 @@ Two accents only (amber, green). No third accent.
 
 - Display: heavy condensed grotesk, caps, tight tracking (Space Grotesk 700 or Archivo Black)
 - Body: Inter or Plus Jakarta Sans, regular weight
-- Data/mono: JetBrains Mono or Fira Code — reserved strictly for status pill, terminal card lines, stat/caption labels
+- Data/mono: JetBrains Mono or Fira Code — reserved strictly for status pill, terminal card lines, stat/caption labels. Bento card body prose (the descriptive sentence in each of the four cards) uses body font (Inter), not mono — confirmed during the final review; only the AI Systems card's cycling readout line and short label captions (e.g. `VIEW APPROACH →`) stay mono.
 
 ## 4. Layout
 
@@ -48,7 +48,7 @@ Asymmetric split, not centered.
 
 - **Left (~60%)**: status pill → display headline → sub-line pitching the six services → primary CTA.
 - **Right (~40%)**: 2×2 bento grid, offset so it visually continues past the fold.
-- **Center/background**: R3F 3D scene (centerpiece + loose primitives) sits behind/among the left column as atmosphere and focal point, with one blueprint-style annotation label.
+- **Left column, third block**: R3F 3D scene (centerpiece + loose primitives) sits stacked below the headline/CTA within the left column, with one blueprint-style annotation label. (Confirmed during the final review as the shipped composition — simpler than true behind-text layering, no text-over-canvas legibility concerns, and already verified clean in-browser. A true behind-text overlay is a possible later revisit, not planned work.)
 - **Floating card**: glass panel, slight rotation (~-3deg), overlaps the bottom edge of the bento grid, breaking the grid intentionally (only place overlap is allowed).
 
 ## 5. Component breakdown

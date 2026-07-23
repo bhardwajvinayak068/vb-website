@@ -11,7 +11,7 @@ const AI_PROCESS_LINES = [
 
 function AiSystemsBody() {
   const line = useCyclingText(AI_PROCESS_LINES, 2500)
-  return <p className="text-terminal-green">{line}</p>
+  return <p className="font-mono text-terminal-green">{line}</p>
 }
 
 export function BentoStack() {
@@ -19,7 +19,7 @@ export function BentoStack() {
     <div className="grid grid-cols-2 gap-5">
       <BentoCard accent="amber" title="Web Design">
         <p>Sites that turn visitors into calls and DMs.</p>
-        <p className="mt-2 text-safety-amber">VIEW APPROACH →</p>
+        <p className="mt-2 font-mono text-safety-amber">VIEW APPROACH →</p>
       </BentoCard>
       <BentoCard accent="green" title="AI Systems">
         <AiSystemsBody />
