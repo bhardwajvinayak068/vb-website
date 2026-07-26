@@ -1,0 +1,73 @@
+<!-- Source for assets/images/og-image.png. Not part of the site;
+     re-render at 1200x630 whenever the hero or wordmark changes. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG source</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  @font-face {
+    font-family: 'Space Grotesk';
+    font-weight: 300 700;
+    src: url('../fonts/space-grotesk-latin.woff2') format('woff2');
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: #0A0A0A;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #fff;
+    position: relative;
+  }
+  .texture {
+    position: absolute; inset: 0;
+    background: url('../assets/images/bg-texture.webp') center / cover;
+    opacity: 0.3;
+  }
+  .portrait {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 520px;
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 16%; }
+  .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right,
+      #0A0A0A 0%, rgba(10,10,10,0.95) 38%, rgba(10,10,10,0.5) 60%, transparent 82%);
+  }
+  .content {
+    position: absolute; left: 72px; top: 50%; translate: 0 -50%;
+    max-width: 640px;
+  }
+  .logo { height: 62px; filter: brightness(1.5); width: auto; margin-bottom: 34px; }
+  .eyebrow {
+    font-size: 17px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: #00FF9C; margin-bottom: 18px; font-weight: 500;
+  }
+  h1 {
+    font-size: 82px; line-height: 0.95; letter-spacing: -0.04em;
+    font-weight: 700;
+  }
+  .sub {
+    margin-top: 22px; font-size: 22px; line-height: 1.45;
+    color: #A0A6A3; max-width: 560px;
+  }
+  .rule {
+    position: absolute; left: 0; bottom: 0; height: 5px; width: 100%;
+    background: linear-gradient(to right, #00FF9C 0%, rgba(0,255,156,0.15) 55%, transparent 100%);
+  }
+</style>
+</head>
+<body>
+  <div class="texture"></div>
+  <div class="portrait"><img src="../assets/images/hero-portrait-1200.webp" alt=""></div>
+  <div class="scrim"></div>
+  <div class="content">
+    <img class="logo" src="../assets/images/logo.webp" alt="">
+    <p class="eyebrow">AI-driven growth partner</p>
+    <h1>Growth,<br>Engineered.</h1>
+    <p class="sub">AI-driven websites, content, and automation systems.</p>
+  </div>
+  <div class="rule"></div>
+</body>
+</html>

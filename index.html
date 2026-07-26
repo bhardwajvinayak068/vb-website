@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>VB — Growth, Engineered. | AI-driven websites, content &amp; automation</title>
+<meta name="description" content="AI-driven websites, content, and automation systems built for businesses that want to move faster than their competition. Built by Vinayak Bhardwaj.">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VB">
+<meta property="og:title" content="Growth, Engineered.">
+<meta property="og:description" content="AI-driven websites, content, and automation systems built for businesses that want to move faster than their competition.">
+<meta property="og:image" content="assets/images/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Growth, Engineered. — VB, AI-driven growth systems.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Growth, Engineered.">
+<meta name="twitter:description" content="AI-driven websites, content, and automation systems built for businesses that want to move faster than their competition.">
+<meta name="twitter:image" content="assets/images/og-image.png">
+
+<!-- Temporary favicon derived from logo.png. Swap these three files when the
+     dedicated favicon set is ready; no other markup needs to change. -->
+<link rel="icon" href="assets/images/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/images/favicon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="assets/images/favicon-180.png">
+
+<link rel="preload" href="fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/images/hero-portrait-1200.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Page loader: matrix-digit grid. Removed on load; a hard timeout in main.js
+     guarantees it can never trap the page. -->
+<div id="loader" class="loader" role="status" aria-label="Loading">
+  <div class="loader__matrix" aria-hidden="true">
+    <span class="loader__digit">0</span><span class="loader__digit">1</span><span class="loader__digit">0</span>
+    <span class="loader__digit">1</span><span class="loader__digit">1</span><span class="loader__digit">0</span>
+    <span class="loader__digit">0</span><span class="loader__digit">1</span><span class="loader__digit">1</span>
+    <span class="loader__glow"></span>
+  </div>
+</div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="page-texture" aria-hidden="true"></div>
+<div id="cursor-trail" class="cursor-trail" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav__logo" href="#top" aria-label="VB — home">
+      <img src="assets/images/logo.webp" alt="" width="633" height="394" decoding="async">
+    </a>
+
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu">
+      <span class="nav__toggle-bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <div class="nav__menu" id="nav-menu">
+      <ul class="nav__links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#work">Work</a></li>
+      </ul>
+      <a class="btn btn--primary nav__cta"
+         href="https://wa.me/60182302045?text=Hi%20Vinayak%2C%20I%27m%20interested%20in%20working%20together"
+         target="_blank" rel="noopener">
+        Book a call
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="top">
+    <div class="hero__media" data-reveal-surface>
+      <div class="hero__layers">
+        <img class="hero__img hero__img--cyborg"
+             src="assets/images/hero-cyborg-1200.webp"
+             srcset="assets/images/hero-cyborg-800.webp 800w, assets/images/hero-cyborg-1200.webp 1200w"
+             sizes="(max-width: 860px) 100vw, 62vw"
+             alt="" aria-hidden="true" width="1200" height="1489" decoding="async">
+        <img class="hero__img hero__img--portrait"
+             src="assets/images/hero-portrait-1200.webp"
+             srcset="assets/images/hero-portrait-800.webp 800w, assets/images/hero-portrait-1200.webp 1200w"
+             sizes="(max-width: 860px) 100vw, 62vw"
+             alt="Vinayak Bhardwaj, black and white studio portrait."
+             width="1200" height="1489" fetchpriority="high" decoding="async">
+      </div>
+      <p class="hero__reveal-hint" aria-hidden="true"><span>Tap the portrait</span></p>
+    </div>
+
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <p class="eyebrow">AI-driven growth partner</p>
+      <h1 class="hero__title">Growth, Engineered.</h1>
+      <p class="hero__sub">AI-driven websites, content, and automation systems built for businesses that want to move faster than their competition.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary"
+           href="https://wa.me/60182302045?text=Hi%20Vinayak%2C%20I%27m%20interested%20in%20working%20together"
+           target="_blank" rel="noopener">Book a call</a>
+        <a class="btn btn--glass" href="#work">See more</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section about" id="about">
+    <div class="container container--narrow">
+      <!-- The eyebrow doubles as this section's heading so About is not the one
+           major section missing one, without inventing copy the brief didn't approve. -->
+      <h2 class="eyebrow">About</h2>
+      <div class="about__body" data-scatter>
+        <p class="about__lead">Before I built AI systems, I built precision. Seven-plus years supervising high-access construction and safety-critical projects taught me one thing: systems either work exactly right, or they fail — there's no in-between. I bring that same engineering discipline to AI-driven growth. I'm not a typical freelancer stitching together templates — I design and build the actual systems (websites, content pipelines, AI automation) that local businesses need to compete and grow, with the same precision I'd apply to a project where mistakes aren't an option.</p>
+      </div>
+      <p class="about__note">Already have a WordPress or Wix site? I can also work within your existing platform if a full rebuild isn't what you need.</p>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">What I do</p>
+        <h2 class="section__title">Seven systems, one operator.</h2>
+      </div>
+
+      <div class="services__grid" id="services-grid">
+
+        <div class="card-slot" data-row="1"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-website.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Website Creation</h3>
+          <p class="card__desc">Your website is your first impression — make it count. I design, build, and write fast, modern sites engineered to convert visitors into customers, not just look pretty.</p>
+          <ul class="tags">
+            <li>Claude Code</li><li>HTML/CSS/JS</li><li>MySQL</li><li>Vercel</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="1"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-content.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Content Creation</h3>
+          <p class="card__desc">Authentic UGC-style ads and short-form video built around the hook, the story, and the retention curve — content engineered to get watched, trusted, and clicked, not just posted.</p>
+          <ul class="tags">
+            <li>Veo</li><li>Runway</li><li>Kling</li><li>CapCut</li><li>Nano Banana Pro</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="1"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-ads.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Social Media Ads</h3>
+          <p class="card__desc">Data-informed ad creative and targeting that turns your ad spend into predictable, measurable growth — not guesswork.</p>
+          <ul class="tags">
+            <li>Meta Ads Manager</li><li>UGC Scripting</li><li>Short-Form Hooks</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="2"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-social-management.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Social Media Management</h3>
+          <p class="card__desc">Consistent posting, real engagement, and a handle that actually looks alive — I plan, create, and manage your social presence so you show up daily without lifting a finger.</p>
+          <ul class="tags">
+            <li>Content Calendars</li><li>Instagram Growth</li><li>Community Management</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="2"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-seo.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Digital Marketing &amp; SEO</h3>
+          <p class="card__desc">Get found before your competitors do. I optimize your website and content to rank higher on Google and stay visible — so growth doesn't stop when the ad budget does.</p>
+          <ul class="tags">
+            <li>On-Page SEO</li><li>Google Search Console</li><li>Keyword Research</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="2"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-design.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Graphic Design</h3>
+          <p class="card__desc">Clean, on-brand visuals across everything you put out — from social posts to full brand identities.</p>
+          <ul class="tags">
+            <li>Gemini/Nano Banana</li><li>Vectorization</li><li>Brand Systems</li>
+          </ul>
+        </article></div>
+
+        <div class="card-slot" data-row="2"><article class="card">
+          <span class="card__icon"><img src="assets/images/icon-ai-automation.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="card__title">Agentic AI Systems</h3>
+          <p class="card__desc">Custom AI automation that handles the busywork — lead follow-ups, customer replies, scheduling — so your business runs smoother without more headcount.</p>
+          <ul class="tags">
+            <li>Claude/GPT APIs</li><li>Python</li><li>n8n</li><li>Make.com</li>
+          </ul>
+        </article></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PORTFOLIO / PROOF ================= -->
+  <section class="section work" id="work">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">Proof of work</p>
+        <h2 class="section__title">Things I've actually shipped.</h2>
+      </div>
+
+      <h3 class="work__group-title">Writing</h3>
+      <div class="work__row work__row--3">
+        <a class="proof proof--text" href="https://medium.com/@bhardwajvinayak068/the-ai-death-spiral-why-free-users-are-bleeding-companies-dry-60040c697525" target="_blank" rel="noopener">
+          <span class="proof__tag">Medium</span>
+          <h4 class="proof__title">The AI Death Spiral: Why Free Users Are Bleeding Companies Dry</h4>
+          <span class="proof__link">Read on Medium <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="proof proof--text" href="https://medium.com/@bhardwajvinayak068/are-we-living-in-the-age-of-peak-idiocy-77ac03c5e511" target="_blank" rel="noopener">
+          <span class="proof__tag">Medium</span>
+          <h4 class="proof__title">Are We Living in the Age of Peak Idiocy?</h4>
+          <span class="proof__link">Read on Medium <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="proof proof--text" href="https://medium.com/@bhardwajvinayak068/how-budget-constraints-are-grounding-nasa-and-halting-discovery-f1bd0dc5a372" target="_blank" rel="noopener">
+          <span class="proof__tag">Medium</span>
+          <h4 class="proof__title">How Budget Constraints Are Grounding NASA and Halting Discovery</h4>
+          <span class="proof__link">Read on Medium <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+
+      <h3 class="work__group-title">Video</h3>
+      <div class="work__row work__row--3">
+        <a class="proof proof--reel" href="https://www.instagram.com/reels/Da7y-J3z3Ts/" target="_blank" rel="noopener">
+          <span class="proof__reel-frame" aria-hidden="true"><span class="proof__play"></span></span>
+          <span class="proof__tag">Instagram</span>
+          <h4 class="proof__title">Short-form reel 01</h4>
+          <span class="proof__link">Watch on Instagram <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="proof proof--reel" href="https://www.instagram.com/reel/Da-C_2jTIph/" target="_blank" rel="noopener">
+          <span class="proof__reel-frame" aria-hidden="true"><span class="proof__play"></span></span>
+          <span class="proof__tag">Instagram</span>
+          <h4 class="proof__title">Short-form reel 02</h4>
+          <span class="proof__link">Watch on Instagram <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="proof proof--reel" href="https://www.instagram.com/reel/DbBA94gzz5v/" target="_blank" rel="noopener">
+          <span class="proof__reel-frame" aria-hidden="true"><span class="proof__play"></span></span>
+          <span class="proof__tag">Instagram</span>
+          <h4 class="proof__title">Short-form reel 03</h4>
+          <span class="proof__link">Watch on Instagram <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+
+      <h3 class="work__group-title">Web design</h3>
+      <div class="work__row work__row--shots">
+        <figure class="shot">
+          <img src="assets/images/proof-wedding-hero.webp" alt="Wedding website screenshot: the envelope intro screen." width="1000" height="567" loading="lazy" decoding="async">
+          <figcaption>Wedding site — envelope intro</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="assets/images/proof-wedding-story.webp" alt="Wedding website screenshot: the couple's story section." width="1000" height="567" loading="lazy" decoding="async">
+          <figcaption>Wedding site — story section</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="assets/images/proof-wedding-gallery.webp" alt="Wedding website screenshot: the photo gallery section." width="1000" height="567" loading="lazy" decoding="async">
+          <figcaption>Wedding site — gallery</figcaption>
+        </figure>
+      </div>
+
+      <aside class="self-callout">
+        <p class="self-callout__kicker">And the one you're looking at</p>
+        <p class="self-callout__line">This site? I built it.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="contact">
+    <div class="cta__bg" aria-hidden="true">
+      <!-- poster is applied by JS when the section is approached, so neither the
+           still nor the loop costs anything on initial load -->
+      <video class="cta__video" muted loop playsinline preload="none"
+             data-poster="assets/images/cta-glow.webp">
+        <source src="assets/images/cta-glow.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="container cta__inner">
+      <h2 class="cta__title">Let's build something that works.</h2>
+      <p class="cta__sub">Message me directly — no forms, no waiting.</p>
+      <a class="btn btn--primary btn--lg"
+         href="https://wa.me/60182302045?text=Hi%20Vinayak%2C%20I%27m%20interested%20in%20working%20together"
+         target="_blank" rel="noopener">Message on WhatsApp</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="assets/images/logo.webp" alt="VB monogram" width="633" height="394" loading="lazy" decoding="async">
+      <p class="footer__tagline">Growth, Engineered.</p>
+    </div>
+
+    <ul class="socials" aria-label="Social links">
+      <li class="social">
+        <a class="social__link" href="https://wa.me/60182302045?text=Hi%20Vinayak%2C%20I%27m%20interested%20in%20working%20together" target="_blank" rel="noopener">
+          <span class="social__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.24 8.24 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.09-.17.04-.31-.02-.43-.06-.13-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.73 2.64 4.19 3.7.59.26 1.04.41 1.4.52.59.19 1.12.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.28Z"/></svg>
+          </span>
+          <span class="sr-only">WhatsApp</span>
+          <span class="social__card" aria-hidden="true">
+            <span class="social__card-name">Vinayak Bhardwaj</span>
+            <span class="social__card-sub">Available on WhatsApp — let's talk about your project</span>
+          </span>
+        </a>
+        <span class="social__label" aria-hidden="true">WhatsApp</span>
+      </li>
+
+      <li class="social">
+        <a class="social__link" href="https://www.instagram.com/vinayak_ai_tech" target="_blank" rel="noopener">
+          <span class="social__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="sr-only">Instagram</span>
+          <span class="social__card" aria-hidden="true">
+            <span class="social__card-name">@vinayak_ai_tech</span>
+            <span class="social__card-sub">See my work on Instagram</span>
+          </span>
+        </a>
+        <span class="social__label" aria-hidden="true">Instagram</span>
+      </li>
+
+      <li class="social">
+        <a class="social__link" href="https://www.linkedin.com/in/vinayak-bhardwaj1947/" target="_blank" rel="noopener">
+          <span class="social__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4v11H3v-11Zm6.5 0h3.83v1.5h.05a4.2 4.2 0 0 1 3.78-2.08c4.04 0 4.79 2.66 4.79 6.12v5.46h-4v-4.84c0-1.15-.02-2.64-1.6-2.64-1.61 0-1.85 1.26-1.85 2.56v4.92h-4v-11Z"/></svg>
+          </span>
+          <span class="sr-only">LinkedIn</span>
+          <span class="social__card" aria-hidden="true">
+            <span class="social__card-name">Vinayak Bhardwaj</span>
+            <span class="social__card-sub">Connect on LinkedIn</span>
+          </span>
+        </a>
+        <span class="social__label" aria-hidden="true">LinkedIn</span>
+      </li>
+    </ul>
+
+    <div class="footer__contact">
+      <a href="mailto:bhardwajvinayak068@gmail.com">bhardwajvinayak068@gmail.com</a>
+    </div>
+  </div>
+
+  <p class="footer__copy">© <span id="year">2026</span> VB — Growth, Engineered.</p>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

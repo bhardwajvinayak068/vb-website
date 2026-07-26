@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+
+# Full-resolution source images. Kept on disk so assets can be re-compressed,
+# but ~65 MB is not something to carry in the repo.
+assets/_originals/
+.agents/
+.claude/skills/
