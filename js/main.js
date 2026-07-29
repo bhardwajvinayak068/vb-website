@@ -53,18 +53,8 @@ safely('loader', () => {
    NAV
    ========================================================================== */
 safely('nav', () => {
-  const wrap   = document.querySelector('.nav-wrap');
   const toggle = document.querySelector('.nav__toggle');
   const menu   = document.getElementById('nav-menu');
-
-  // Solidify the bar once the hero starts scrolling away.
-  const onScroll = () => {
-    if (window.scrollY > 24) wrap.setAttribute('data-scrolled', '');
-    else wrap.removeAttribute('data-scrolled');
-  };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
-
   if (!toggle || !menu) return;
 
   const setOpen = (open) => {

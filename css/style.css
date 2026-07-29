@@ -116,8 +116,8 @@ html {
      changes how fixed/anchored descendants resolve */
   overflow-x: clip;
   scroll-behavior: smooth;
-  /* the fixed nav must not cover anchored section headings */
-  scroll-padding-top: 6rem;
+  /* small breathing room above anchor targets; no fixed header to clear */
+  scroll-padding-top: 2rem;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -409,36 +409,25 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* =============================================================================
    NAV
    ========================================================================== */
-/* Fixed, not sticky: a sticky header sits in normal flow, so the hero started
-   below it and the only thing behind the bar was the page background — a
-   translucent bar over flat black just reads as a black bar. Taking it out of
-   flow lets the hero portrait (and every section after it) pass underneath, so
-   the transparency has something to actually show. */
+/* No bar, and nothing pinned. The header is a fully transparent layer whose
+   logo and link cluster float in the top corners of the hero, and it scrolls
+   away with the hero like any other content — so there is never a strip across
+   the top, and the links never end up sitting on light imagery further down
+   (they measured 2.4:1 against light screenshots when this was fixed). */
 .nav-wrap {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
-  /* transparent glass, not a black bar — the blur carries legibility instead
-     of an opaque fill */
-  background: rgba(10, 10, 10, 0.18);
-  backdrop-filter: blur(20px) saturate(170%);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  transition: background-color 300ms ease, border-color 300ms ease;
+  position: absolute; top: 0; left: 0; right: 0; z-index: 120;
+  background: none;
+  border: 0;
+  pointer-events: none; /* the transparent layer must not eat hero clicks */
 }
-/* Only once content is scrolling underneath does it firm up a little, and even
-   then it stays translucent. */
-.nav-wrap[data-scrolled] {
-  background: rgba(10, 10, 10, 0.45);
-  border-bottom-color: var(--green-15);
-}
+.nav-wrap > * { pointer-events: auto; }
 
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding: 0.85rem var(--gutter);
+  padding: 1.1rem clamp(1.25rem, 3vw, 2.75rem);
 }
 
 .nav__logo { display: block; flex-shrink: 0; }
@@ -455,9 +444,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: relative;
   display: inline-block;
   padding-block: 0.35rem;
-  color: var(--text-2);
+  /* White, not the muted grey used elsewhere: with no bar behind them these sit
+     directly on the portrait, whose lit backdrop pushed grey links to 2.8:1.
+     White clears 6.9:1 against the brightest point behind them. */
+  color: var(--white);
   font-size: 0.9375rem;
   font-weight: 500;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
   transition: color 200ms ease;
 }
 .nav__links a::after {
@@ -470,7 +463,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: transform 220ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav__links a:hover { color: var(--white); }
+  .nav__links a:hover { color: var(--green-hover); }
   .nav__links a:hover::after { transform: scaleX(1); }
 }
 .nav__links a:focus-visible::after { transform: scaleX(1); }
@@ -509,8 +502,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: 50% 18%;
+  /* contain, not cover: the full portrait is shown top to bottom and is never
+     cropped. The photo's own vignette is already near-black, so the letterbox
+     either side simply reads as the page background. */
+  object-fit: contain;
+  object-position: right center;
 }
 
 /* The cyborg is masked IN under the cursor rather than the portrait being
@@ -1251,7 +1247,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   }
   /* the fixed bar overlays the top of the portrait, so nudge the framing down
      to keep the face clear of it */
-  .hero__img { object-position: 50% 20%; }
+  .hero__img { object-position: center bottom; }
   .hero__img { object-position: 50% 12%; }
   .hero__scrim {
     background:
