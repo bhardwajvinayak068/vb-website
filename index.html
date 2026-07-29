@@ -48,7 +48,18 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <div class="page-texture" aria-hidden="true"></div>
-<div id="cursor-trail" class="cursor-trail" aria-hidden="true"></div>
+<svg id="cursor-trail" class="cursor-trail" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- updated every frame: x1/y1 sit at the tail, x2/y2 at the head, so the
+         fade always runs along the direction of travel, whatever it is -->
+    <linearGradient id="trail-fade" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"  stop-color="#00FF9C" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#00FF9C" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <path class="trail-glow" fill="none"/>
+  <path class="trail-core" fill="none" stroke="url(#trail-fade)"/>
+</svg>
 
 <header class="nav-wrap">
   <nav class="nav" aria-label="Primary">
@@ -117,7 +128,16 @@
 
   <!-- ================= ABOUT ================= -->
   <section class="section about" id="about">
-    <div class="ambient ambient--alt" aria-hidden="true"></div>
+    <div class="ambient ambient--alt" aria-hidden="true">
+      <div class="ambient__glow"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__nodes">
+        <span class="ambient__node" style="--nx:20%; --ny:22%"></span>
+        <span class="ambient__node" style="--nx:72%; --ny:34%"></span>
+        <span class="ambient__node" style="--nx:42%; --ny:64%"></span>
+        <span class="ambient__node" style="--nx:82%; --ny:74%"></span>
+      </div>
+    </div>
     <div class="container container--about">
       <!-- The eyebrow doubles as this section's heading so About is not the one
            major section missing one, without inventing copy the brief didn't approve. -->
@@ -131,7 +151,17 @@
 
   <!-- ================= SERVICES ================= -->
   <section class="section services" id="services">
-    <div class="ambient" aria-hidden="true"></div>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient__glow"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__nodes">
+        <span class="ambient__node" style="--nx:16%; --ny:20%"></span>
+        <span class="ambient__node" style="--nx:60%; --ny:14%"></span>
+        <span class="ambient__node" style="--nx:38%; --ny:56%"></span>
+        <span class="ambient__node" style="--nx:80%; --ny:62%"></span>
+        <span class="ambient__node" style="--nx:22%; --ny:82%"></span>
+      </div>
+    </div>
     <div class="container">
       <div class="section__head">
         <p class="eyebrow">What I do</p>
@@ -209,7 +239,17 @@
 
   <!-- ================= PORTFOLIO / PROOF ================= -->
   <section class="section work" id="work">
-    <div class="ambient ambient--alt" aria-hidden="true"></div>
+    <div class="ambient ambient--alt" aria-hidden="true">
+      <div class="ambient__glow"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__nodes">
+        <span class="ambient__node" style="--nx:24%; --ny:16%"></span>
+        <span class="ambient__node" style="--nx:66%; --ny:26%"></span>
+        <span class="ambient__node" style="--nx:44%; --ny:52%"></span>
+        <span class="ambient__node" style="--nx:14%; --ny:70%"></span>
+        <span class="ambient__node" style="--nx:78%; --ny:80%"></span>
+      </div>
+    </div>
     <div class="container">
       <div class="section__head">
         <p class="eyebrow">Proof of work</p>

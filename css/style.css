@@ -247,45 +247,99 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .section { padding-block: clamp(5rem, 11vh, 8.5rem); position: relative; }
 
-/* --- ambient light -------------------------------------------------------- */
+/* --- ambient depth --------------------------------------------------------- */
 /* Frosted glass only reads as glass if there is something behind it to refract.
    Against flat #0A0A0A a backdrop-filter produces flat #0A0A0A — i.e. a grey
-   tile. These soft out-of-focus glows sit behind the glass surfaces and give
-   the blur real light and colour to pick up. */
+   tile. Three real depth layers sit behind the glass surfaces: a soft far glow,
+   a tilted mid-distance circuit grid, and a handful of near "nodes" — plus a
+   cursor perspective. Layers move at different rates under the cursor (the
+   nearer the layer, the more it shifts), which is the actual depth cue; the
+   translate/tilt values themselves are written by the ambient-depth module in
+   main.js and default to zero, so the layers sit still and correct if that
+   script never runs (reduced motion, touch, or a script failure). */
 .ambient {
   position: absolute;
   inset: -8% 0;
   z-index: -1;
+  perspective: 1000px;
   pointer-events: none;
   overflow: hidden;
 }
-.ambient::before,
-.ambient::after {
+
+/* layer 1 — far: the original soft colour glow. Barely moves. */
+.ambient__glow {
+  position: absolute; inset: 0;
+  transition: translate 500ms var(--ease-out);
+  will-change: translate;
+}
+.ambient__glow::before,
+.ambient__glow::after {
   content: '';
   position: absolute;
   border-radius: 50%;
   filter: blur(96px);
 }
-.ambient::before {
+.ambient__glow::before {
   width: 46%; aspect-ratio: 1.3;
   top: 4%; left: 6%;
   background: radial-gradient(circle, rgba(0, 255, 156, 0.085) 0%, transparent 68%);
 }
-.ambient::after {
+.ambient__glow::after {
   width: 42%; aspect-ratio: 1.1;
   bottom: 2%; right: 4%;
   background: radial-gradient(circle, rgba(0, 255, 156, 0.13) 0%, transparent 68%);
 }
 /* second, offset pair so the field is not obviously two blobs */
-.ambient--alt::before {
+.ambient--alt .ambient__glow::before {
   top: auto; bottom: 8%; left: 34%;
   width: 38%;
   background: radial-gradient(circle, rgba(77, 255, 184, 0.085) 0%, transparent 70%);
 }
-.ambient--alt::after {
+.ambient--alt .ambient__glow::after {
   top: 6%; right: 22%; bottom: auto;
   width: 34%;
   background: radial-gradient(circle, rgba(0, 255, 156, 0.075) 0%, transparent 70%);
+}
+
+/* layer 2 — mid: a circuit grid on a fixed 3D tilt (so it reads as a plane
+   receding into the section, not a flat pattern), plus a small extra tilt on
+   top of that from the cursor position. */
+.ambient__grid {
+  position: absolute; inset: -20% -10%;
+  background-image:
+    linear-gradient(rgba(0, 255, 156, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 156, 0.13) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: rotateX(55deg) rotateZ(-8deg) scale(1.5)
+             rotateY(var(--tilt-y, 0deg)) rotateX(var(--tilt-x, 0deg));
+  transform-origin: center 30%;
+  mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 75%);
+  opacity: 0.65;
+  transition: transform 260ms var(--ease-out);
+  will-change: transform;
+}
+
+/* layer 3 — near: a few glowing points, the closest layer, so they get the
+   largest parallax shift. Whichever one the cursor is nearest brightens, as if
+   it noticed. */
+.ambient__nodes {
+  position: absolute; inset: 0;
+  transition: translate 380ms var(--ease-out);
+  will-change: translate;
+}
+.ambient__node {
+  position: absolute;
+  left: var(--nx); top: var(--ny);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 15px 4px rgba(0, 255, 156, 0.45);
+  transition: scale 220ms var(--ease-out), box-shadow 220ms ease;
+}
+.ambient__node[data-near] {
+  scale: 1.8;
+  box-shadow: 0 0 24px 7px rgba(0, 255, 156, 0.7);
 }
 
 .section__head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
@@ -1180,25 +1234,36 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 
 /* =============================================================================
-   CURSOR COMET TRAIL
+   CURSOR LIGHT-BEAM TRAIL
+   One continuous stroke through a chain of eased points (quadratic-smoothed
+   in JS), not discrete dots. Two paths: a wide blurred glow underneath, and a
+   crisp core on top whose stroke is a gradient running tail-to-head, so the
+   beam fades away behind the cursor rather than repeating in segments.
    ========================================================================== */
 .cursor-trail {
-  position: fixed; top: 0; left: 0;
-  width: 0; height: 0;
+  position: fixed; inset: 0;
+  width: 100vw; height: 100vh;
   z-index: 400;
   pointer-events: none;
+  overflow: visible;
 }
-.trail-dot {
-  position: absolute; top: 0; left: 0;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 10px 2px rgba(0, 255, 156, 0.45);
-  will-change: transform, opacity;
-  transition: opacity 260ms ease;
+.trail-glow,
+.trail-core {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  will-change: d;
+}
+.trail-glow {
+  stroke: var(--green);
+  stroke-width: 12;
+  stroke-opacity: 0.28;
+  filter: blur(7px);
+}
+.trail-core {
+  stroke-width: 2.75;
 }
 /* Suppressed over the hero so it never competes with the reveal effect. */
-.cursor-trail[data-hidden] .trail-dot { opacity: 0 !important; }
+.cursor-trail[data-hidden] { opacity: 0; transition: opacity 200ms ease; }
 
 /* =============================================================================
    SCROLL REVEAL

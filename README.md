@@ -104,7 +104,21 @@ The hero portrait uses `object-fit: cover` with `object-position: 50% 0%` — to
 anchored, so it fills the frame at full scale and any excess is trimmed off the
 **bottom**. The head and shoulders are never cut.
 
-Glass surfaces depend on the `.ambient` glow layers behind them. `backdrop-filter`
+Glass surfaces depend on the `.ambient` layers behind them: a soft far glow, a
+tilted circuit grid, and a handful of near "nodes". Under a fine pointer they
+parallax at different rates as the cursor moves within that section — nearer
+layers shift more — and the node closest to the cursor brightens. Everything
+defaults to a static 0 offset, so with the module gated off (touch, reduced
+motion) the layers still render correctly, just still.
+
+The cursor trail is one continuous SVG stroke (a quadratic-smoothed curve
+through the same eased point chain used before), not a row of dots. A
+`linearGradient` whose `x1/y1/x2/y2` are re-pointed at the tail and head every
+frame fades it from transparent to bright along whatever direction it's
+actually travelling — that's what makes it read as a light beam instead of a
+line of circles.
+
+Glass surfaces depend on the `.ambient` layers behind them. `backdrop-filter`
 over flat `#0A0A0A` returns flat `#0A0A0A` — a grey tile. The out-of-focus glows
 plus `saturate()` in `--glass-blur` are what make the panes read as glass.
 

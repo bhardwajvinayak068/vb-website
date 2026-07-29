@@ -340,27 +340,45 @@ safely('email-reveal', () => {
 });
 
 /* =============================================================================
-   CURSOR COMET TRAIL
-   A chain of dots, each easing toward the one ahead of it, so the tail whips
-   rather than sliding as a rigid unit. Hidden over the hero.
+   CURSOR LIGHT-BEAM TRAIL
+   Same underlying physics as before — a chain of points, each easing toward
+   the one ahead of it, so the tail whips rather than sliding as a rigid unit —
+   but rendered as one continuous SVG stroke instead of discrete dots.
+
+   The curve is smoothed with quadratic Béziers through the midpoints of
+   consecutive points (the standard cheap trick for turning a polyline into a
+   smooth freehand-style curve). The fade from bright head to transparent tail
+   is a gradient whose x1/y1/x2/y2 are re-pointed at the head and tail every
+   frame, so it always fades along the actual direction of travel rather than
+   a fixed axis.
    ========================================================================== */
 safely('cursor-trail', () => {
-  const host = document.getElementById('cursor-trail');
+  const svg = document.getElementById('cursor-trail');
   const hero = document.querySelector('.hero');
-  if (!host || !pointerOK()) return;
+  if (!svg || !pointerOK()) return;
+
+  const glowPath = svg.querySelector('.trail-glow');
+  const corePath = svg.querySelector('.trail-core');
+  const gradient = svg.querySelector('#trail-fade');
 
   const COUNT = 10;
-  const dots = [];
+  const pts = Array.from({ length: COUNT }, () => ({
+    x: window.innerWidth / 2, y: window.innerHeight / 2,
+  }));
 
-  for (let i = 0; i < COUNT; i++) {
-    const t = i / (COUNT - 1);
-    const el = document.createElement('div');
-    el.className = 'trail-dot';
-    el.style.opacity = String(0.55 * (1 - t) ** 1.4);
-    el.style.visibility = 'hidden';
-    dots.push({ el, x: window.innerWidth / 2, y: window.innerHeight / 2, scale: 1 - t * 0.8 });
-    host.append(el);
-  }
+  // quadratic-through-midpoints smoothing; pts[0] is the head (nearest the
+  // real cursor), pts[last] is the tail.
+  const smoothPath = () => {
+    let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const mx = (pts[i].x + pts[i + 1].x) / 2;
+      const my = (pts[i].y + pts[i + 1].y) / 2;
+      d += ` Q ${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`;
+    }
+    const last = pts[pts.length - 1];
+    d += ` L ${last.x.toFixed(1)},${last.y.toFixed(1)}`;
+    return d;
+  };
 
   let mx = -100, my = -100;
   let seen = false;
@@ -370,25 +388,31 @@ safely('cursor-trail', () => {
     mx = e.clientX; my = e.clientY;
     if (!seen) { // avoid a whip-in from offscreen on the very first move
       seen = true;
-      for (const d of dots) { d.x = mx; d.y = my; d.el.style.visibility = ''; }
+      for (const p of pts) { p.x = mx; p.y = my; }
+      svg.style.visibility = '';
     }
     if (hero) {
       const r = hero.getBoundingClientRect();
       const over = e.clientY >= r.top && e.clientY <= r.bottom &&
                    e.clientX >= r.left && e.clientX <= r.right;
-      host.toggleAttribute('data-hidden', over);
+      svg.toggleAttribute('data-hidden', over);
     }
   }, { passive: true });
+  svg.style.visibility = 'hidden'; // until the first real pointermove lands
 
   const frame = () => {
     let tx = mx, ty = my;
-    for (const d of dots) {
-      d.x += (tx - d.x) * 0.32;
-      d.y += (ty - d.y) * 0.32;
-      d.el.style.transform =
-        `translate3d(${d.x}px, ${d.y}px, 0) translate(-50%, -50%) scale(${d.scale})`;
-      tx = d.x; ty = d.y;
+    for (const p of pts) {
+      p.x += (tx - p.x) * 0.32;
+      p.y += (ty - p.y) * 0.32;
+      tx = p.x; ty = p.y;
     }
+    const d = smoothPath();
+    glowPath.setAttribute('d', d);
+    corePath.setAttribute('d', d);
+    const head = pts[0], tail = pts[pts.length - 1];
+    gradient.setAttribute('x1', tail.x); gradient.setAttribute('y1', tail.y);
+    gradient.setAttribute('x2', head.x); gradient.setAttribute('y2', head.y);
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
@@ -405,6 +429,67 @@ safely('cursor-trail', () => {
    from a single rotation about the axis (a, b, 0) — so it maps cleanly onto the
    axis-angle form `rotate` expects.
    ========================================================================== */
+
+/* =============================================================================
+   AMBIENT DEPTH BACKGROUND
+   Three layers behind the glass sections (far glow, mid circuit-grid, near
+   nodes) parallax at different rates under the cursor — the actual depth cue,
+   since distant things appear to shift less than near ones. Scoped per
+   section: each .section with an .ambient tracks the pointer only while it is
+   over that section's own content, rather than the whole page sharing one
+   coordinate space.
+   ========================================================================== */
+safely('ambient-depth', () => {
+  if (!pointerOK()) return;
+
+  for (const ambient of document.querySelectorAll('.ambient')) {
+    const section = ambient.parentElement;
+    const glow = ambient.querySelector('.ambient__glow');
+    const grid = ambient.querySelector('.ambient__grid');
+    const nodesLayer = ambient.querySelector('.ambient__nodes');
+    const nodes = [...ambient.querySelectorAll('.ambient__node')];
+    if (!section || !glow || !grid || !nodesLayer) continue;
+
+    let pending = null;
+
+    const reset = () => {
+      glow.style.translate = '0 0';
+      grid.style.setProperty('--tilt-y', '0deg');
+      grid.style.setProperty('--tilt-x', '0deg');
+      nodesLayer.style.translate = '0 0';
+      for (const n of nodes) n.removeAttribute('data-near');
+    };
+
+    section.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || pending) return;
+      pending = requestAnimationFrame(() => {
+        pending = null;
+        const r = section.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+
+        glow.style.translate = `${(px * 10).toFixed(1)}px ${(py * 10).toFixed(1)}px`;
+        grid.style.setProperty('--tilt-y', `${(px * 6).toFixed(2)}deg`);
+        grid.style.setProperty('--tilt-x', `${(-py * 4).toFixed(2)}deg`);
+        nodesLayer.style.translate = `${(px * 26).toFixed(1)}px ${(py * 22).toFixed(1)}px`;
+
+        for (const n of nodes) {
+          const nr = n.getBoundingClientRect();
+          const dx = nr.left + nr.width / 2 - e.clientX;
+          const dy = nr.top + nr.height / 2 - e.clientY;
+          if (Math.hypot(dx, dy) < 100) n.setAttribute('data-near', '');
+          else n.removeAttribute('data-near');
+        }
+      });
+    }, { passive: true });
+
+    section.addEventListener('pointerleave', () => {
+      if (pending) { cancelAnimationFrame(pending); pending = null; }
+      reset();
+    });
+  }
+});
+
 safely('card-tilt', () => {
   if (!pointerOK()) return;
 
