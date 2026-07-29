@@ -200,10 +200,21 @@ safely('hero-reveal', () => {
    Each word is an inline-block (so it never breaks mid-word across lines) and
    each character inside it moves independently.
 
-   That is ~600 spans, so writing to all of them every frame would be wasteful.
-   Character centres are measured once and cached, and each frame only touches
-   characters currently inside the cursor radius plus the ones that were moved
-   on the previous frame and now need releasing.
+   Position is manually eased every rAF frame and written as an already-
+   interpolated `transform`, the same pattern the hero reveal and cursor trail
+   already use elsewhere in this file — NOT a CSS `transition` retargeted on
+   every mousemove. Driving continuous cursor-following motion through a CSS
+   transition means every ~16ms mousemove hands it a brand-new absolute target,
+   so the element is perpetually mid-retarget and never settles into a single
+   coherent easing curve; that reads as stutter even when the frame rate itself
+   is fine. Manual easing (current += (target - current) * factor) is the
+   textbook fix and is what makes the other two effects in this file smooth.
+
+   The per-frame loop also avoids any allocation (typed arrays, reused every
+   frame) — the previous version allocated a fresh `Set` on every single
+   animation frame while the cursor moved, which is avoidable GC pressure that
+   can show up as an occasional, hard-to-reproduce stutter under sustained
+   interaction.
    ========================================================================== */
 safely('char-scatter', () => {
   const host = document.querySelector('[data-scatter] .about__lead');
@@ -231,6 +242,7 @@ safely('char-scatter', () => {
   if (!pointerOK()) return;
 
   const chars = [...host.querySelectorAll('.c')];
+  const N = chars.length;
   let centres = null;
 
   const measure = () => {
@@ -243,57 +255,69 @@ safely('char-scatter', () => {
 
   const RADIUS = 120;
   const PUSH = 20;
-  let pending = null;
-  let active = new Set();   // indices currently displaced
+  const EASE = 0.22; // same family of easing constant as the hero reveal (0.14) / trail (0.32-0.4)
 
-  const apply = (px, py) => {
-    const next = new Set();
-    for (let i = 0; i < chars.length; i++) {
+  // current eased offset, target offset, and near-state — all reused every
+  // frame, nothing allocated in the hot path.
+  const curX = new Float32Array(N), curY = new Float32Array(N);
+  const tgtX = new Float32Array(N), tgtY = new Float32Array(N);
+  const near = new Uint8Array(N);
+
+  const setTargets = (px, py) => {
+    for (let i = 0; i < N; i++) {
       const c = centres[i];
-      const dx = c.x - px;
-      const dy = c.y - py;
-      if (Math.abs(dx) > RADIUS || Math.abs(dy) > RADIUS) continue; // cheap reject
+      const dx = c.x - px, dy = c.y - py;
+      if (Math.abs(dx) > RADIUS || Math.abs(dy) > RADIUS) { tgtX[i] = 0; tgtY[i] = 0; near[i] = 0; continue; }
       const dist = Math.hypot(dx, dy);
-      if (dist >= RADIUS) continue;
+      if (dist >= RADIUS) { tgtX[i] = 0; tgtY[i] = 0; near[i] = 0; continue; }
       const force = ((RADIUS - dist) / RADIUS) ** 1.4 * PUSH;
       const d = dist || 1;
+      tgtX[i] = (dx / d) * force;
+      tgtY[i] = (dy / d) * force;
+      near[i] = 1;
+    }
+  };
+
+  let raf = null;
+  const tick = () => {
+    let settled = true;
+    for (let i = 0; i < N; i++) {
+      const dx = tgtX[i] - curX[i], dy = tgtY[i] - curY[i];
+      if (Math.abs(dx) > 0.04 || Math.abs(dy) > 0.04) settled = false;
+      curX[i] += dx * EASE;
+      curY[i] += dy * EASE;
+
       const el = chars[i];
-      el.style.transform = `translate(${((dx / d) * force).toFixed(2)}px, ${((dy / d) * force).toFixed(2)}px)`;
-      el.setAttribute('data-near', '');
-      next.add(i);
+      const atRest = Math.abs(curX[i]) < 0.04 && Math.abs(curY[i]) < 0.04 && !near[i];
+      if (atRest) {
+        if (el.style.transform) el.style.transform = '';
+      } else {
+        el.style.transform = `translate(${curX[i].toFixed(2)}px, ${curY[i].toFixed(2)}px)`;
+      }
+      if (near[i]) { if (!el.hasAttribute('data-near')) el.setAttribute('data-near', ''); }
+      else if (el.hasAttribute('data-near')) el.removeAttribute('data-near');
     }
-    // release everything that left the radius since last frame
-    for (const i of active) {
-      if (next.has(i)) continue;
-      chars[i].style.transform = '';
-      chars[i].removeAttribute('data-near');
-    }
-    active = next;
+    raf = settled ? null : requestAnimationFrame(tick);
   };
+  const start = () => { if (raf === null) raf = requestAnimationFrame(tick); };
 
-  const reset = () => {
-    for (const i of active) {
-      chars[i].style.transform = '';
-      chars[i].removeAttribute('data-near');
-    }
-    active = new Set();
-  };
-
+  let pendingMove = null;
   host.addEventListener('pointerenter', measure);
   host.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
     if (!centres) measure();
-    if (pending) return;
-    pending = requestAnimationFrame(() => {
-      pending = null;
+    if (pendingMove) return;
+    pendingMove = requestAnimationFrame(() => {
+      pendingMove = null;
       const r = host.getBoundingClientRect(); // one read per frame, not per char
-      apply(e.clientX - r.left, e.clientY - r.top);
+      setTargets(e.clientX - r.left, e.clientY - r.top);
+      start();
     });
   }, { passive: true });
-  host.addEventListener('pointerleave', reset);
+  host.addEventListener('pointerleave', () => { tgtX.fill(0); tgtY.fill(0); near.fill(0); start(); });
 
   // cached centres are invalid the moment the text reflows
-  window.addEventListener('resize', () => { centres = null; reset(); }, { passive: true });
+  window.addEventListener('resize', () => { centres = null; }, { passive: true });
 });
 
 /* =============================================================================

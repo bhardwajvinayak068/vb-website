@@ -708,12 +708,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* JS wraps each word in .w and each character inside it in .c. The word stays
    inline-block so it never breaks mid-word across lines; the characters inside
-   are what actually move. */
+   are what actually move.
+
+   `transform` has no CSS transition — the JS manually eases position every
+   frame and writes the already-interpolated value directly (same pattern as
+   the hero reveal / cursor trail). A CSS transition retargeted on every single
+   mousemove never settles into one coherent curve and reads as stutter even at
+   a full frame rate; only the glow (color/text-shadow), a discrete on/off
+   toggle rather than a continuous chase, gets a short transition. */
 .about__lead .w { display: inline-block; white-space: nowrap; }
 .about__lead .c {
   display: inline-block;
-  will-change: transform;
-  transition: transform 460ms var(--ease-out), color 460ms ease, text-shadow 460ms ease;
+  transition: color 160ms ease, text-shadow 160ms ease;
 }
 .about__lead .c[data-near] {
   color: var(--green);
