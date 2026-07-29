@@ -92,6 +92,11 @@ stop, Safari paints it transparent), so masking the base portrait meant Safari
 showed the cyborg by default. `opacity` on the cyborg is a second, independent
 guard: if `mask-image` fails entirely, the portrait still wins.
 
+The nav is `position: fixed`, not sticky, and the hero starts at y=0 so the
+portrait passes underneath it. A sticky header sits in normal flow, which put
+the hero *below* the bar — leaving nothing behind it but the page background, so
+a translucent bar still read as a solid black one.
+
 Glass surfaces depend on the `.ambient` glow layers behind them. `backdrop-filter`
 over flat `#0A0A0A` returns flat `#0A0A0A` — a grey tile. The out-of-focus glows
 plus `saturate()` in `--glass-blur` are what make the panes read as glass.

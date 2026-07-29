@@ -112,11 +112,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* `clip` (not `hidden`) so it cannot create a scroll container and break
-     position: sticky on the nav */
+  /* `clip` (not `hidden`): `hidden` would make this a scroll container, which
+     changes how fixed/anchored descendants resolve */
   overflow-x: clip;
   scroll-behavior: smooth;
-  /* the sticky nav must not cover anchored section headings */
+  /* the fixed nav must not cover anchored section headings */
   scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
 }
@@ -409,8 +409,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* =============================================================================
    NAV
    ========================================================================== */
+/* Fixed, not sticky: a sticky header sits in normal flow, so the hero started
+   below it and the only thing behind the bar was the page background — a
+   translucent bar over flat black just reads as a black bar. Taking it out of
+   flow lets the hero portrait (and every section after it) pass underneath, so
+   the transparency has something to actually show. */
 .nav-wrap {
-  position: sticky; top: 0; z-index: 120;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
   /* transparent glass, not a black bar — the blur carries legibility instead
      of an opaque fill */
   background: rgba(10, 10, 10, 0.18);
@@ -482,11 +487,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    ========================================================================== */
 .hero {
   position: relative;
-  /* the nav is sticky and in flow, so its height comes off the viewport budget */
-  min-height: min(calc(100svh - var(--nav-h)), 860px);
+  /* the nav is fixed and overlays this section, so the hero owns the full
+     viewport and just pads its content clear of the bar */
+  min-height: min(100svh, 900px);
   display: flex;
   align-items: flex-end;
-  padding: 5rem var(--gutter) clamp(3rem, 7vh, 5rem);
+  padding: calc(var(--nav-h) + 3rem) var(--gutter) clamp(3rem, 7vh, 5rem);
   overflow: hidden;
   isolation: isolate;
 }
@@ -494,8 +500,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__media {
   position: absolute;
   z-index: -2;
-  /* pulled up behind the translucent nav so the portrait runs edge to edge */
-  top: calc(-1 * var(--nav-h)); right: 0; bottom: 0;
+  top: 0; right: 0; bottom: 0;
   width: min(64vw, 820px);
 }
 
@@ -1234,7 +1239,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     align-items: flex-start;
     flex-direction: column;
     justify-content: flex-end;
-    padding-top: 0;
+    padding-top: var(--nav-h);
     padding-bottom: clamp(2.5rem, 7vh, 4rem);
   }
   .hero__media {
@@ -1244,6 +1249,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     height: min(62svh, 460px);
     z-index: -2;
   }
+  /* the fixed bar overlays the top of the portrait, so nudge the framing down
+     to keep the face clear of it */
+  .hero__img { object-position: 50% 20%; }
   .hero__img { object-position: 50% 12%; }
   .hero__scrim {
     background:
@@ -1318,5 +1326,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* Touch devices have no cursor to trail. */
 @media (hover: none), (pointer: coarse) {
   .cursor-trail { display: none; }
-  .hero__reveal-hint { display: block; }
+  /* clear of the hero copy, which is pulled up over the base of the portrait */
+  .hero__reveal-hint { display: block; bottom: 5rem; }
 }
