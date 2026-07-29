@@ -409,13 +409,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* =============================================================================
    NAV
    ========================================================================== */
-/* No bar, and nothing pinned. The header is a fully transparent layer whose
-   logo and link cluster float in the top corners of the hero, and it scrolls
-   away with the hero like any other content — so there is never a strip across
-   the top, and the links never end up sitting on light imagery further down
-   (they measured 2.4:1 against light screenshots when this was fixed). */
+/* No bar. The header is a fully transparent layer holding two floating things:
+   the wordmark and a single toggle button. Because the nav collapses to a
+   button at every width — not just on mobile — there is no strip of link text
+   that could end up sitting on light content, so the header can stay pinned and
+   keep the CTA reachable the whole way down the page. */
 .nav-wrap {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 120;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
   background: none;
   border: 0;
   pointer-events: none; /* the transparent layer must not eat hero clicks */
@@ -423,6 +423,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .nav-wrap > * { pointer-events: auto; }
 
 .nav {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -437,38 +438,97 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer__brand img { filter: brightness(1.5); }
 .nav__logo img { width: auto; height: 34px; }
 
-.nav__menu { display: flex; align-items: center; gap: clamp(1.5rem, 3vw, 2.5rem); }
+/* --- toggle button -------------------------------------------------------- */
+.nav__toggle {
+  display: grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  margin-left: auto;
+  border-radius: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  transition: border-color 220ms ease, box-shadow 220ms ease,
+              transform 160ms var(--ease-out);
+}
+.nav__toggle:active { transform: scale(0.94); }
 
-.nav__links { display: flex; gap: clamp(1.25rem, 2.5vw, 2rem); }
-.nav__links a {
-  position: relative;
-  display: inline-block;
-  padding-block: 0.35rem;
-  /* White, not the muted grey used elsewhere: with no bar behind them these sit
-     directly on the portrait, whose lit backdrop pushed grey links to 2.8:1.
-     White clears 6.9:1 against the brightest point behind them. */
-  color: var(--white);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
-  transition: color 200ms ease;
-}
-.nav__links a::after {
-  content: '';
-  position: absolute; left: 0; bottom: 0;
-  width: 100%; height: 1px;
-  background: var(--green);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 220ms var(--ease-out);
-}
 @media (hover: hover) and (pointer: fine) {
-  .nav__links a:hover { color: var(--green-hover); }
-  .nav__links a:hover::after { transform: scaleX(1); }
+  .nav__toggle:hover {
+    border-color: var(--green-35);
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45), 0 0 26px rgba(0, 255, 156, 0.18);
+  }
 }
-.nav__links a:focus-visible::after { transform: scaleX(1); }
 
-.nav__toggle { display: none; }
+.nav__toggle-bars,
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  display: block;
+  width: 18px; height: 1.5px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: transform 240ms var(--ease-out), background-color 160ms ease;
+}
+.nav__toggle-bars { position: relative; }
+.nav__toggle-bars::before,
+.nav__toggle-bars::after { content: ''; position: absolute; left: 0; }
+.nav__toggle-bars::before { top: -6px; }
+.nav__toggle-bars::after  { top: 6px; }
+
+/* open state: the bars collapse into a cross */
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars { background: transparent; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* --- disclosure panel ----------------------------------------------------- */
+/* Scales out of the button it belongs to, not from its own centre. */
+.nav__menu {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: clamp(1.25rem, 3vw, 2.75rem);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  width: max-content;
+  min-width: 236px;
+  padding: 0.7rem;
+  border-radius: var(--radius);
+  background: rgba(14, 15, 14, 0.92);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.62);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 190ms var(--ease-out), transform 190ms var(--ease-out);
+}
+.nav__menu[data-open] { opacity: 1; transform: none; pointer-events: auto; }
+
+.nav__links { display: flex; flex-direction: column; gap: 0; }
+.nav__links a {
+  display: block;
+  padding: 0.65rem 0.7rem;
+  border-radius: 9px;
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav__links a:hover {
+    color: var(--green-hover);
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.nav__cta { width: 100%; margin-top: 0.45rem; }
 
 /* =============================================================================
    HERO
@@ -502,11 +562,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  /* contain, not cover: the full portrait is shown top to bottom and is never
-     cropped. The photo's own vignette is already near-black, so the letterbox
-     either side simply reads as the page background. */
-  object-fit: contain;
-  object-position: right center;
+  /* cover, anchored to the top edge: the portrait fills the frame at its full
+     scale and any excess is trimmed off the BOTTOM, so the head and shoulders
+     are never cut. */
+  object-fit: cover;
+  object-position: 50% 0%;
 }
 
 /* The cyborg is masked IN under the cursor rather than the portrait being
@@ -1171,62 +1231,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (max-width: 860px) {
   :root { --radius: 14px; }
 
-  /* --- nav becomes a disclosure panel --- */
-  .nav { position: relative; }
-  .nav__toggle {
-    display: grid;
-    place-items: center;
-    width: 44px; height: 44px;
-    margin-left: auto;
-    border-radius: 10px;
-    border: 1px solid var(--line-2);
-    background: var(--surface-1);
-  }
-  .nav__toggle-bars,
-  .nav__toggle-bars::before,
-  .nav__toggle-bars::after {
-    display: block;
-    width: 18px; height: 1.5px;
-    background: var(--white);
-    border-radius: 2px;
-    transition: transform 240ms var(--ease-out), opacity 160ms ease;
-  }
-  .nav__toggle-bars { position: relative; }
-  .nav__toggle-bars::before,
-  .nav__toggle-bars::after { content: ''; position: absolute; left: 0; }
-  .nav__toggle-bars::before { top: -6px; }
-  .nav__toggle-bars::after  { top: 6px; }
-
-  .nav__toggle[aria-expanded="true"] .nav__toggle-bars { background: transparent; }
-  .nav__toggle[aria-expanded="true"] .nav__toggle-bars::before { transform: translateY(6px) rotate(45deg); }
-  .nav__toggle[aria-expanded="true"] .nav__toggle-bars::after  { transform: translateY(-6px) rotate(-45deg); }
-
-  .nav__menu {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    left: var(--gutter); right: var(--gutter);
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.35rem;
-    padding: 0.75rem;
-    border-radius: var(--radius);
-    background: rgba(14, 15, 14, 0.95);
-    border: 1px solid var(--line-2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transform: translateY(-8px) scale(0.98);
-    transform-origin: top center;
-    pointer-events: none;
-    transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
-  }
-  .nav__menu[data-open] { opacity: 1; transform: none; pointer-events: auto; }
-
-  .nav__links { flex-direction: column; gap: 0; }
-  .nav__links a { padding: 0.7rem 0.65rem; font-size: 1rem; border-radius: 8px; }
-  .nav__links a::after { display: none; }
-  .nav__cta { width: 100%; margin-top: 0.35rem; }
+  /* The nav is the same button-and-panel at every width; on a narrow screen
+     the panel just must not exceed the viewport. */
+  .nav__menu { min-width: 0; width: min(19rem, calc(100vw - 2 * var(--gutter))); }
 
   /* --- hero: the portrait moves to the top half and the copy sits under it,
          full width. Bottom-left text over a face does not work at 390px. --- */
@@ -1247,7 +1254,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   }
   /* the fixed bar overlays the top of the portrait, so nudge the framing down
      to keep the face clear of it */
-  .hero__img { object-position: center bottom; }
+  .hero__img { object-position: 50% 0%; }
   .hero__img { object-position: 50% 12%; }
   .hero__scrim {
     background:
