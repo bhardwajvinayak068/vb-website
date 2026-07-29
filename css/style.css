@@ -365,18 +365,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   color: var(--green);
 }
 
-/* Circuit texture. Fixed and very low opacity so it reads as material, not
-   wallpaper — the brief calls for restrained tech motifs. */
-.page-texture {
-  position: fixed; inset: 0;
-  z-index: -1;
-  background:
-    url('../assets/images/bg-texture.webp') center / cover no-repeat,
-    var(--bg);
-  opacity: 0.22;
-  pointer-events: none;
-}
-
 /* =============================================================================
    BUTTONS
    Primary = saturated green glass. Secondary = neutral glass with a green
@@ -1255,12 +1243,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .trail-glow {
   stroke: var(--green);
-  stroke-width: 12;
-  stroke-opacity: 0.28;
-  filter: blur(7px);
+  stroke-width: 6;
+  stroke-opacity: 0.14;
+  filter: blur(4px);
 }
 .trail-core {
-  stroke-width: 2.75;
+  stroke-width: 1.4;
 }
 /* Suppressed over the hero so it never competes with the reveal effect. */
 .cursor-trail[data-hidden] { opacity: 0; transition: opacity 200ms ease; }

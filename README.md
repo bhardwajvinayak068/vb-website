@@ -111,6 +111,11 @@ layers shift more — and the node closest to the cursor brightens. Everything
 defaults to a static 0 offset, so with the module gated off (touch, reduced
 motion) the layers still render correctly, just still.
 
+There is no separate page-wide texture image any more — the tilted CSS grid
+inside `.ambient` already covers that job in Services/About/Work, and having
+both the static image and the animated grid stacked was genuine redundancy,
+not two things doing different jobs.
+
 The cursor trail is one continuous SVG stroke (a quadratic-smoothed curve
 through the same eased point chain used before), not a row of dots. A
 `linearGradient` whose `x1/y1/x2/y2` are re-pointed at the tail and head every

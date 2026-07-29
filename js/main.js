@@ -361,7 +361,7 @@ safely('cursor-trail', () => {
   const corePath = svg.querySelector('.trail-core');
   const gradient = svg.querySelector('#trail-fade');
 
-  const COUNT = 10;
+  const COUNT = 6; // short tail — a whisper, not a streak
   const pts = Array.from({ length: COUNT }, () => ({
     x: window.innerWidth / 2, y: window.innerHeight / 2,
   }));
@@ -403,8 +403,8 @@ safely('cursor-trail', () => {
   const frame = () => {
     let tx = mx, ty = my;
     for (const p of pts) {
-      p.x += (tx - p.x) * 0.32;
-      p.y += (ty - p.y) * 0.32;
+      p.x += (tx - p.x) * 0.4;
+      p.y += (ty - p.y) * 0.4;
       tx = p.x; ty = p.y;
     }
     const d = smoothPath();
@@ -632,7 +632,6 @@ safely('parallax', () => {
 
   const layers = [
     { el: document.querySelector('.hero__media'), depth: 0.12 },
-    { el: document.querySelector('.page-texture'), depth: 0.03 },
   ].filter((l) => l.el);
   if (!layers.length) return;
 
