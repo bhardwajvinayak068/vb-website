@@ -206,81 +206,147 @@ safely('hero-reveal', () => {
 });
 
 /* =============================================================================
-   ABOUT — WORD SCATTER
-   Word centres are measured once and cached relative to the paragraph, so a
-   pointermove costs one rect read instead of one per word.
+   ABOUT — CHARACTER SCATTER
+   Each word is an inline-block (so it never breaks mid-word across lines) and
+   each character inside it moves independently.
+
+   That is ~600 spans, so writing to all of them every frame would be wasteful.
+   Character centres are measured once and cached, and each frame only touches
+   characters currently inside the cursor radius plus the ones that were moved
+   on the previous frame and now need releasing.
    ========================================================================== */
-safely('word-scatter', () => {
+safely('char-scatter', () => {
   const host = document.querySelector('[data-scatter] .about__lead');
   if (!host) return;
 
-  // Split into words, preserving the original text exactly.
-  const words = host.textContent.split(/(\s+)/);
+  // Rebuild the paragraph as words-of-characters, preserving the text exactly.
+  const source = host.textContent;
   host.textContent = '';
   const frag = document.createDocumentFragment();
-  for (const chunk of words) {
+  for (const chunk of source.split(/(\s+)/)) {
+    if (chunk === '') continue;
     if (/^\s+$/.test(chunk)) { frag.append(chunk); continue; }
-    const span = document.createElement('span');
-    span.className = 'w';
-    span.textContent = chunk;
-    frag.append(span);
+    const word = document.createElement('span');
+    word.className = 'w';
+    for (const ch of chunk) {
+      const c = document.createElement('span');
+      c.className = 'c';
+      c.textContent = ch;
+      word.append(c);
+    }
+    frag.append(word);
   }
   host.append(frag);
 
   if (!pointerOK()) return;
 
-  const spans = [...host.querySelectorAll('.w')];
-  let hostRect = null;
-  let centres = [];
+  const chars = [...host.querySelectorAll('.c')];
+  let centres = null;
 
   const measure = () => {
-    hostRect = host.getBoundingClientRect();
-    centres = spans.map((s) => {
+    const hr = host.getBoundingClientRect();
+    centres = chars.map((s) => {
       const r = s.getBoundingClientRect();
-      return { x: r.left - hostRect.left + r.width / 2,
-               y: r.top - hostRect.top + r.height / 2 };
+      return { x: r.left - hr.left + r.width / 2, y: r.top - hr.top + r.height / 2 };
     });
   };
 
-  const RADIUS = 105;
-  const PUSH = 17;
+  const RADIUS = 120;
+  const PUSH = 20;
   let pending = null;
+  let active = new Set();   // indices currently displaced
 
   const apply = (px, py) => {
-    for (let i = 0; i < spans.length; i++) {
+    const next = new Set();
+    for (let i = 0; i < chars.length; i++) {
       const c = centres[i];
       const dx = c.x - px;
       const dy = c.y - py;
-      const dist = Math.hypot(dx, dy) || 1;
-      const span = spans[i];
-      if (dist < RADIUS) {
-        const force = ((RADIUS - dist) / RADIUS) * PUSH;
-        span.style.transform = `translate(${(dx / dist) * force}px, ${(dy / dist) * force}px)`;
-        if (!span.hasAttribute('data-near')) span.setAttribute('data-near', '');
-      } else if (span.style.transform) {
-        span.style.transform = '';
-        span.removeAttribute('data-near');
-      }
+      if (Math.abs(dx) > RADIUS || Math.abs(dy) > RADIUS) continue; // cheap reject
+      const dist = Math.hypot(dx, dy);
+      if (dist >= RADIUS) continue;
+      const force = ((RADIUS - dist) / RADIUS) ** 1.4 * PUSH;
+      const d = dist || 1;
+      const el = chars[i];
+      el.style.transform = `translate(${((dx / d) * force).toFixed(2)}px, ${((dy / d) * force).toFixed(2)}px)`;
+      el.setAttribute('data-near', '');
+      next.add(i);
     }
+    // release everything that left the radius since last frame
+    for (const i of active) {
+      if (next.has(i)) continue;
+      chars[i].style.transform = '';
+      chars[i].removeAttribute('data-near');
+    }
+    active = next;
   };
 
   const reset = () => {
-    for (const s of spans) { s.style.transform = ''; s.removeAttribute('data-near'); }
+    for (const i of active) {
+      chars[i].style.transform = '';
+      chars[i].removeAttribute('data-near');
+    }
+    active = new Set();
   };
 
   host.addEventListener('pointerenter', measure);
   host.addEventListener('pointermove', (e) => {
-    if (!hostRect) measure();
+    if (e.pointerType !== 'mouse') return;
+    if (!centres) measure();
     if (pending) return;
     pending = requestAnimationFrame(() => {
       pending = null;
-      const r = host.getBoundingClientRect(); // cheap: one read per frame
+      const r = host.getBoundingClientRect(); // one read per frame, not per char
       apply(e.clientX - r.left, e.clientY - r.top);
     });
   }, { passive: true });
   host.addEventListener('pointerleave', reset);
 
-  window.addEventListener('resize', () => { hostRect = null; reset(); }, { passive: true });
+  // cached centres are invalid the moment the text reflows
+  window.addEventListener('resize', () => { centres = null; reset(); }, { passive: true });
+});
+
+/* =============================================================================
+   FOOTER — EMAIL REVEAL
+   ========================================================================== */
+safely('email-reveal', () => {
+  const btn = document.querySelector('.social--email .social__link');
+  const panel = document.getElementById('email-reveal');
+  if (!btn || !panel) return;
+
+  const setOpen = (open) => {
+    btn.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open;
+    panel.toggleAttribute('data-open', open);
+  };
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setOpen(btn.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.social--email')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+
+  const copy = panel.querySelector('.email-reveal__copy');
+  copy?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(copy.dataset.copy);
+      copy.textContent = 'Copied';
+      copy.setAttribute('data-copied', '');
+      setTimeout(() => { copy.textContent = 'Copy'; copy.removeAttribute('data-copied'); }, 1600);
+    } catch {
+      // clipboard blocked (insecure origin, denied permission) — the address is
+      // already on screen and selectable, so there is nothing to recover from
+    }
+  });
 });
 
 /* =============================================================================
@@ -301,7 +367,8 @@ safely('cursor-trail', () => {
     const el = document.createElement('div');
     el.className = 'trail-dot';
     el.style.opacity = String(0.55 * (1 - t) ** 1.4);
-    dots.push({ el, x: -100, y: -100, scale: 1 - t * 0.8 });
+    el.style.visibility = 'hidden';
+    dots.push({ el, x: window.innerWidth / 2, y: window.innerHeight / 2, scale: 1 - t * 0.8 });
     host.append(el);
   }
 
@@ -313,7 +380,7 @@ safely('cursor-trail', () => {
     mx = e.clientX; my = e.clientY;
     if (!seen) { // avoid a whip-in from offscreen on the very first move
       seen = true;
-      for (const d of dots) { d.x = mx; d.y = my; }
+      for (const d of dots) { d.x = mx; d.y = my; d.el.style.visibility = ''; }
     }
     if (hero) {
       const r = hero.getBoundingClientRect();

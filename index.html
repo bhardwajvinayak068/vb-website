@@ -81,18 +81,21 @@
   <!-- ================= HERO ================= -->
   <section class="hero" id="top">
     <div class="hero__media" data-reveal-surface>
+      <!-- Portrait is the base layer and is never masked, so it is what shows by
+           default no matter what. The cyborg sits on top, hidden, and is masked
+           IN under the cursor. -->
       <div class="hero__layers">
-        <img class="hero__img hero__img--cyborg"
-             src="assets/images/hero-cyborg-1200.webp"
-             srcset="assets/images/hero-cyborg-800.webp 800w, assets/images/hero-cyborg-1200.webp 1200w"
-             sizes="(max-width: 860px) 100vw, 62vw"
-             alt="" aria-hidden="true" width="1200" height="1489" decoding="async">
         <img class="hero__img hero__img--portrait"
              src="assets/images/hero-portrait-1200.webp"
              srcset="assets/images/hero-portrait-800.webp 800w, assets/images/hero-portrait-1200.webp 1200w"
              sizes="(max-width: 860px) 100vw, 62vw"
              alt="Vinayak Bhardwaj, black and white studio portrait."
              width="1200" height="1489" fetchpriority="high" decoding="async">
+        <img class="hero__img hero__img--cyborg"
+             src="assets/images/hero-cyborg-1200.webp"
+             srcset="assets/images/hero-cyborg-800.webp 800w, assets/images/hero-cyborg-1200.webp 1200w"
+             sizes="(max-width: 860px) 100vw, 62vw"
+             alt="" aria-hidden="true" width="1200" height="1489" decoding="async">
       </div>
       <p class="hero__reveal-hint" aria-hidden="true"><span>Tap the portrait</span></p>
     </div>
@@ -100,7 +103,7 @@
     <div class="hero__scrim" aria-hidden="true"></div>
 
     <div class="hero__content">
-      <p class="eyebrow">AI-driven growth partner</p>
+      <p class="eyebrow eyebrow--hero">AI-driven growth partner</p>
       <h1 class="hero__title">Growth, Engineered.</h1>
       <p class="hero__sub">AI-driven websites, content, and automation systems built for businesses that want to move faster than their competition.</p>
       <div class="hero__cta">
@@ -114,7 +117,8 @@
 
   <!-- ================= ABOUT ================= -->
   <section class="section about" id="about">
-    <div class="container container--narrow">
+    <div class="ambient ambient--alt" aria-hidden="true"></div>
+    <div class="container container--about">
       <!-- The eyebrow doubles as this section's heading so About is not the one
            major section missing one, without inventing copy the brief didn't approve. -->
       <h2 class="eyebrow">About</h2>
@@ -127,6 +131,7 @@
 
   <!-- ================= SERVICES ================= -->
   <section class="section services" id="services">
+    <div class="ambient" aria-hidden="true"></div>
     <div class="container">
       <div class="section__head">
         <p class="eyebrow">What I do</p>
@@ -204,6 +209,7 @@
 
   <!-- ================= PORTFOLIO / PROOF ================= -->
   <section class="section work" id="work">
+    <div class="ambient ambient--alt" aria-hidden="true"></div>
     <div class="container">
       <div class="section__head">
         <p class="eyebrow">Proof of work</p>
@@ -331,6 +337,8 @@
         <span class="social__label" aria-hidden="true">Instagram</span>
       </li>
 
+
+
       <li class="social">
         <a class="social__link" href="https://www.linkedin.com/in/vinayak-bhardwaj1947/" target="_blank" rel="noopener">
           <span class="social__icon" aria-hidden="true">
@@ -344,11 +352,23 @@
         </a>
         <span class="social__label" aria-hidden="true">LinkedIn</span>
       </li>
+      <li class="social social--email">
+        <button class="social__link" type="button" aria-expanded="false" aria-controls="email-reveal">
+          <span class="social__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5 12 13l9-6.5"/></svg>
+          </span>
+          <span class="sr-only">Show email address</span>
+        </button>
+        <span class="social__label" aria-hidden="true">Email</span>
+        <div class="email-reveal" id="email-reveal" hidden>
+          <a class="email-reveal__addr" href="mailto:bhardwajvinayak068@gmail.com">bhardwajvinayak068@gmail.com</a>
+          <button class="email-reveal__copy" type="button" data-copy="bhardwajvinayak068@gmail.com">Copy</button>
+        </div>
+      </li>
+
     </ul>
 
-    <div class="footer__contact">
-      <a href="mailto:bhardwajvinayak068@gmail.com">bhardwajvinayak068@gmail.com</a>
-    </div>
+
   </div>
 
   <p class="footer__copy">© <span id="year">2026</span> VB — Growth, Engineered.</p>

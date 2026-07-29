@@ -74,7 +74,8 @@ Edit `tools/og-source.html`, then screenshot it at exactly 1200×630 and save to
 Every effect is off by default for people who ask for less:
 
 - `prefers-reduced-motion: reduce` disables the cursor trail, the CTA video
-  loop, scroll reveals, and all movement. Colour and opacity cues remain.
+  loop (the static poster still shows), scroll reveals, and all movement.
+  Colour and opacity cues remain.
 - Touch devices get the cursor trail removed entirely and real tap equivalents
   for the hero reveal (tap, plus a one-time auto-hint) and the footer social
   cards (always-visible labels).
@@ -84,6 +85,16 @@ Every effect is off by default for people who ask for less:
 anime.js owns `transform` on the service cards during the layout reflow, so the
 cursor tilt deliberately uses the independent `rotate` property — the two
 compose instead of overwriting each other.
+
+The hero reveal masks the **cyborg** layer in, rather than punching the portrait
+out. A zero-radius `radial-gradient` is engine-dependent (Chrome paints the last
+stop, Safari paints it transparent), so masking the base portrait meant Safari
+showed the cyborg by default. `opacity` on the cyborg is a second, independent
+guard: if `mask-image` fails entirely, the portrait still wins.
+
+Glass surfaces depend on the `.ambient` glow layers behind them. `backdrop-filter`
+over flat `#0A0A0A` returns flat `#0A0A0A` — a grey tile. The out-of-focus glows
+plus `saturate()` in `--glass-blur` are what make the panes read as glass.
 
 ## Content rules
 
