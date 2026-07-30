@@ -145,7 +145,7 @@ h1, h2, h3, h4 {
 }
 
 p { margin: 0; }
-ul { margin: 0; padding: 0; list-style: none; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
 
 a { color: var(--green); text-decoration: none; }
 
@@ -749,6 +749,60 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   text-shadow: 0 0 16px var(--green-glow);
 }
 
+/* --- experience timeline -------------------------------------------------- */
+/* Static by spec. The rule is drawn once across the whole row rather than as a
+   segment per item, so the three nodes always land on one continuous line
+   regardless of how unevenly the copy below them wraps. */
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding-top: 1.75rem;
+  counter-reset: milestone;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  /* full width with faded ends — gap-independent, so the rule always meets the
+     node centres regardless of how the columns resolve */
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%, var(--line-2) 16%, var(--line-2) 84%, transparent 100%);
+}
+
+.timeline__item { position: relative; }
+/* the node */
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  top: -21px;
+  left: 50%;
+  translate: -50% 0;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px 3px rgba(0, 255, 156, 0.4);
+}
+
+.timeline__title {
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+  text-align: center;
+}
+.timeline__text {
+  margin-top: 0.4rem;
+  color: var(--text-3);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  text-align: center;
+  text-wrap: pretty;
+}
+
 .about__note {
   margin-top: 2rem;
   padding-left: 1rem;
@@ -881,6 +935,134 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--glass-bg-hover);
 }
 .card:focus-within::after { background: var(--glass-edge-hover); }
+
+/* =============================================================================
+   HOW I WORK
+   Numbered steps on the same glass system as the service cards, but flatter —
+   this section is a sequence to read, not a grid to explore, so it gets no
+   tilt, no expand, no hover reflow.
+   ========================================================================== */
+.process__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.85rem, 1.5vw, 1.15rem);
+  counter-reset: step;
+}
+
+.process__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  counter-increment: step;
+  transition: border-color 260ms ease, box-shadow 260ms ease;
+}
+.process__step::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-edge);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+/* step number, sits quietly in the corner */
+.process__step::before {
+  content: '0' counter(step);
+  position: absolute;
+  top: clamp(1.25rem, 2vw, 1.6rem);
+  right: clamp(1.25rem, 2vw, 1.6rem);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  opacity: 0.5;
+}
+
+.process__icon {
+  display: grid;
+  place-items: center;
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  background: rgba(0, 255, 156, 0.07);
+  border: 1px solid var(--green-15);
+  overflow: hidden;
+}
+/* same neon-on-opaque-black artwork as the service icons */
+.process__icon img {
+  width: 52px; height: 52px;
+  scale: 1.35;
+  mix-blend-mode: screen;
+}
+
+.process__title { font-size: 1.0625rem; letter-spacing: -0.02em; }
+.process__text {
+  color: var(--text-2);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .process__step:hover { border-color: var(--green-35); box-shadow: 0 12px 38px rgba(0,0,0,0.45), 0 0 30px rgba(0,255,156,0.12); }
+  .process__step:hover::after { background: var(--glass-edge-hover); }
+}
+
+/* =============================================================================
+   TOOLS I USE
+   Text-only badges. No third-party brand logos — trademark constraint.
+   ========================================================================== */
+/* Flex, not an equal-column grid: with five groups of very different widths a
+   fixed track size orphaned the last group onto its own row and forced its
+   badges to stack one per line, which read as a list rather than a cloud.
+   Letting each group take its natural width keeps them packed. */
+.tools__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.75rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.5rem);
+}
+.tools__group { flex: 0 1 auto; max-width: 100%; }
+
+.tools__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.9rem;
+}
+
+.tools__list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+.tool-badge {
+  padding: 0.5rem 0.85rem;
+  border-radius: 100px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--text-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color 240ms ease, border-color 240ms ease, background 240ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tool-badge:hover {
+    color: var(--white);
+    border-color: var(--green-35);
+    background: var(--glass-bg-hover);
+  }
+}
 
 /* =============================================================================
    WORK / PROOF
@@ -1307,6 +1489,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
   .work__row--3, .work__row--shots { grid-template-columns: repeat(2, 1fr); }
   .work__row--3 > :last-child { grid-column: span 2; }
+
+  .process__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---- mobile -------------------------------------------------------------- */
@@ -1352,6 +1536,25 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .about__grid { grid-template-columns: 1fr; gap: 1.75rem; }
   .about__portrait { max-width: 78%; margin-inline: auto; }
 
+  /* --- timeline: three columns is unreadable at this width, so the rail turns
+         vertical and the copy sits beside each node, left-aligned --- */
+  .timeline {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding-top: 0;
+    padding-left: 1.5rem;
+  }
+  .timeline::before {
+    top: 6px; bottom: 6px;
+    left: 4px; right: auto;
+    width: 1px; height: auto;
+    background: linear-gradient(to bottom,
+      transparent 0%, var(--line-2) 10%, var(--line-2) 90%, transparent 100%);
+  }
+  .timeline__item::before { top: 6px; left: -1.5rem; translate: 0 0; }
+  .timeline__title,
+  .timeline__text { text-align: left; }
+
   /* --- services: single column, icon inline with the title so cards stay
          short enough to scan by scrolling --- */
   .services__grid { grid-template-columns: 1fr; }
@@ -1373,6 +1576,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .card__title { grid-area: title; font-size: 1.125rem; }
   .card__desc  { grid-area: desc; }
   .tags        { grid-area: tags; }
+
+  /* --- how i work: one step at a time --- */
+  .process__grid { grid-template-columns: 1fr; }
 
   /* --- work --- */
   .work__row--3, .work__row--shots { grid-template-columns: 1fr; }

@@ -75,6 +75,7 @@
       <ul class="nav__links">
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
+        <li><a href="#process">How I work</a></li>
         <li><a href="#work">Work</a></li>
       </ul>
       <a class="btn btn--primary nav__cta"
@@ -156,6 +157,28 @@
         <p class="about__note">Already have a WordPress or Wix site? I can also work within your existing platform if a full rebuild isn't what you need.</p>
       </div>
     </div>
+
+    <!-- Experience timeline. Static by spec: a thin muted rule, three green
+         nodes at even intervals, no hover or scroll behaviour.
+         DRAFT COPY — mirrors the arc already stated in the approved About
+         paragraph (7+ years safety-critical work -> the shift -> now). No dates
+         or job titles are asserted, because none are given in the brief. -->
+    <div class="container">
+      <ol class="timeline">
+        <li class="timeline__item">
+          <h3 class="timeline__title">Precision under pressure</h3>
+          <p class="timeline__text">Seven-plus years supervising high-access construction and safety-critical projects.</p>
+        </li>
+        <li class="timeline__item">
+          <h3 class="timeline__title">The shift</h3>
+          <p class="timeline__text">Same discipline, new medium — from physical systems to digital ones.</p>
+        </li>
+        <li class="timeline__item">
+          <h3 class="timeline__title">Building growth systems</h3>
+          <p class="timeline__text">Websites, content pipelines and AI automation for businesses that want to move faster.</p>
+        </li>
+      </ol>
+    </div>
   </section>
 
   <!-- ================= SERVICES ================= -->
@@ -236,12 +259,123 @@
         <div class="card-slot" data-row="2"><article class="card">
           <span class="card__icon"><img src="assets/images/icon-ai-automation.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
           <h3 class="card__title">Agentic AI Systems</h3>
-          <p class="card__desc">Custom AI automation that handles the busywork — lead follow-ups, customer replies, scheduling — so your business runs smoother without more headcount.</p>
+          <!-- DRAFT: first sentence is the brief's approved copy verbatim. The
+               second sentence is the added micro-SaaS merge and is written, not
+               from the brief — it deliberately claims no pricing or timeline. -->
+          <p class="card__desc">Custom AI automation that handles the busywork — lead follow-ups, customer replies, scheduling — so your business runs smoother without more headcount. And when a workflow needs more than automation, I build it into a small, focused tool your team can actually log into and use.</p>
           <ul class="tags">
-            <li>Claude/GPT APIs</li><li>Python</li><li>n8n</li><li>Make.com</li>
+            <li>Claude/GPT APIs</li><li>Python</li><li>n8n</li><li>Make.com</li><li>Micro-SaaS Builds</li>
           </ul>
         </article></div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW I WORK =================
+       DRAFT COPY — step names come from the supplied process-*.png filenames
+       (discover / design / build / launch). The descriptions are written, not
+       from the brief, and make no claims about timelines or deliverables. -->
+  <section class="section process" id="process">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient__glow"></div>
+      <div class="ambient__grid"></div>
+      <div class="ambient__nodes">
+        <span class="ambient__node" style="--nx:18%; --ny:26%"></span>
+        <span class="ambient__node" style="--nx:64%; --ny:18%"></span>
+        <span class="ambient__node" style="--nx:40%; --ny:70%"></span>
+        <span class="ambient__node" style="--nx:86%; --ny:60%"></span>
+      </div>
+    </div>
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">How I work</p>
+        <h2 class="section__title">Four steps, no mystery.</h2>
+      </div>
+
+      <ol class="process__grid">
+        <li class="process__step">
+          <span class="process__icon"><img src="assets/images/process-discover.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="process__title">Discover</h3>
+          <p class="process__text">We start with the problem, not the pixels. What the business needs, who it's for, and what "working" actually looks like.</p>
+        </li>
+        <li class="process__step">
+          <span class="process__icon"><img src="assets/images/process-design.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="process__title">Design</h3>
+          <p class="process__text">Structure and look decided before a line of code — layout, hierarchy, and how the whole thing should feel to use.</p>
+        </li>
+        <li class="process__step">
+          <span class="process__icon"><img src="assets/images/process-build.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="process__title">Build</h3>
+          <p class="process__text">Built for real conditions: fast, accessible, and responsive on every screen — not just the one it was designed on.</p>
+        </li>
+        <li class="process__step">
+          <span class="process__icon"><img src="assets/images/process-launch.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <h3 class="process__title">Launch</h3>
+          <p class="process__text">Shipped, checked, and handed over — with everything set up so it stays easy to update after I'm gone.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= TOOLS I USE =================
+       Text-only glass badges. No third-party brand logos anywhere — that is a
+       trademark constraint, not a style choice. Every name below is lifted
+       verbatim from the approved service tags in build-brief.md section 3, just
+       regrouped; nothing here is invented. -->
+  <section class="section tools" id="tools">
+    <div class="container">
+      <div class="section__head">
+        <p class="eyebrow">Tools I use</p>
+        <h2 class="section__title">The actual stack.</h2>
+      </div>
+
+      <div class="tools__groups">
+        <div class="tools__group">
+          <h3 class="tools__label">Build</h3>
+          <ul class="tools__list">
+            <li class="tool-badge">Claude Code</li>
+            <li class="tool-badge">HTML/CSS/JS</li>
+            <li class="tool-badge">MySQL</li>
+            <li class="tool-badge">Vercel</li>
+          </ul>
+        </div>
+        <div class="tools__group">
+          <h3 class="tools__label">AI &amp; automation</h3>
+          <ul class="tools__list">
+            <li class="tool-badge">Claude/GPT APIs</li>
+            <li class="tool-badge">Python</li>
+            <li class="tool-badge">n8n</li>
+            <li class="tool-badge">Make.com</li>
+          </ul>
+        </div>
+        <div class="tools__group">
+          <h3 class="tools__label">Content &amp; video</h3>
+          <ul class="tools__list">
+            <li class="tool-badge">Veo</li>
+            <li class="tool-badge">Runway</li>
+            <li class="tool-badge">Kling</li>
+            <li class="tool-badge">CapCut</li>
+            <li class="tool-badge">Nano Banana Pro</li>
+          </ul>
+        </div>
+        <div class="tools__group">
+          <h3 class="tools__label">Design</h3>
+          <ul class="tools__list">
+            <li class="tool-badge">Gemini/Nano Banana</li>
+            <li class="tool-badge">Vectorization</li>
+            <li class="tool-badge">Brand Systems</li>
+          </ul>
+        </div>
+        <div class="tools__group">
+          <h3 class="tools__label">Marketing &amp; SEO</h3>
+          <ul class="tools__list">
+            <li class="tool-badge">Meta Ads Manager</li>
+            <li class="tool-badge">Google Search Console</li>
+            <li class="tool-badge">On-Page SEO</li>
+            <li class="tool-badge">Keyword Research</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>

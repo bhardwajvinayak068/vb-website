@@ -629,7 +629,7 @@ safely('card-layout', async () => {
    ========================================================================== */
 safely('scroll-reveal', () => {
   const targets = [
-    ...document.querySelectorAll('.section__head, .card-slot, .proof, .shot, .self-callout, .about__body, .about__note, .work__group-title'),
+    ...document.querySelectorAll('.section__head, .card-slot, .proof, .shot, .self-callout, .about__body, .about__note, .about__portrait, .work__group-title, .timeline__item, .process__step, .tools__group'),
   ];
   if (!motionOK()) return;
 
