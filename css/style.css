@@ -243,7 +243,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding-inline: var(--gutter);
 }
 .container--narrow { max-width: 820px; }
-.container--about  { max-width: 1040px; }
 
 .section { padding-block: clamp(5rem, 11vh, 8.5rem); position: relative; }
 
@@ -698,11 +697,35 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* =============================================================================
    ABOUT
    ========================================================================== */
+/* Portrait beside the copy. The image column is deliberately the narrower one —
+   the story is the point of this section, the portrait supports it. */
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.about__portrait {
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+.about__portrait img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+
 .about__body { margin-top: 1.5rem; }
 
 .about__lead {
-  font-size: clamp(1.15rem, 0.95rem + 0.95vw, 1.75rem);
-  line-height: 1.6;
+  font-size: clamp(1.05rem, 0.92rem + 0.6vw, 1.4rem);
+  line-height: 1.65;
   letter-spacing: -0.015em;
 }
 
@@ -1324,6 +1347,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .hero__title { font-size: clamp(2.75rem, 12vw, 4rem); }
   .hero__cta { margin-top: 1.5rem; }
   .hero__cta .btn { flex: 1 1 auto; }
+
+  /* --- about: stack, portrait above the copy --- */
+  .about__grid { grid-template-columns: 1fr; gap: 1.75rem; }
+  .about__portrait { max-width: 78%; margin-inline: auto; }
 
   /* --- services: single column, icon inline with the title so cards stay
          short enough to scan by scrolling --- */
