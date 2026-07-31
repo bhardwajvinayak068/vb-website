@@ -1,8 +1,6 @@
 # VB — Growth, Engineered.
 
 Single-page static site for Vinayak Bhardwaj's AI-driven growth agency.
-Built from `build-brief.md` (content, palette, interaction spec) and
-`claude-code-prompt.md` (execution rules).
 
 ## Stack
 
