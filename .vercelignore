@@ -1,0 +1,9 @@
+# Vercel CLI does not read .gitignore for upload purposes, so anything that
+# should never be publicly servable needs to be listed here too. This is the
+# same _originals/ exclusion as .gitignore, plus editor/dev-only clutter.
+.DS_Store
+**/.DS_Store
+assets/_originals/
+.agents/
+.claude/skills/
+.git/

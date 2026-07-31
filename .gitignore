@@ -6,3 +6,5 @@
 assets/_originals/
 .agents/
 .claude/skills/
+.vercel
+.env*
