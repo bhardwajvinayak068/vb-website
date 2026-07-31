@@ -557,6 +557,16 @@
   <p class="footer__copy">© <span id="year">2026</span> VB — Growth, Engineered.</p>
 </footer>
 
+<!-- Vercel Web Analytics. This is a build-less static site (no bundler), so the
+     npm package's inject() call has nothing to consume it — this is Vercel's
+     own documented path for plain HTML: an inline shim for window.va, then the
+     hosted script. Requires Web Analytics switched on for this project in the
+     Vercel dashboard (Analytics tab -> Enable) or the script 404s. -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
