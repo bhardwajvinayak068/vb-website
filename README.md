@@ -132,3 +132,67 @@ Set by the brief, do not undo without asking:
 - No testimonials section — none exist yet.
 - The wedding site's live URL is never linked; screenshots only.
 - No invented services, pricing, stats, or contact methods.
+
+## Deployment
+
+| | |
+| --- | --- |
+| Live site | <https://vinayakbhardwaj.vercel.app/> |
+| Vercel dashboard | <https://vercel.com/me-only10/vb-website> |
+| GitHub repo | <https://github.com/bhardwajvinayak068/vb-website> (public) |
+
+**Dashboard access:** log into vercel.com with the account already linked to
+the local `vercel` CLI (`vercel whoami`). No separate signup — the project
+lives under the `me-only10` team.
+
+**Redeploy after changes:**
+
+```bash
+git add -A && git commit -m "..."
+git push
+vercel --prod --yes
+```
+
+Push and deploy are two separate steps right now — GitHub auto-deploy-on-push
+isn't wired up. The CLI's attempt to connect the repo failed because the
+Vercel account has no GitHub login connection yet, and that's a one-time
+authorization only the account owner can grant (Vercel dashboard → this
+project → **Settings → Git → Connect Repository** → authorize GitHub → pick
+`bhardwajvinayak068/vb-website`). Once done, `git push` alone triggers a
+deploy and the `vercel --prod` step above becomes unnecessary.
+
+**`.vercelignore` matters here.** The Vercel CLI does not read `.gitignore`
+for upload purposes. Without `.vercelignore` mirroring the same exclusions,
+`assets/_originals/` (65 MB of uncompressed source photos) uploads on every
+deploy and — because this project has no build step and serves the directory
+as-is — becomes genuinely public at `/assets/_originals/...`. This happened on
+the first deploy and was caught and fixed before the client saw the link.
+Keep any new top-level directory that shouldn't be public in both ignore files.
+
+**Analytics:** Vercel Web Analytics is wired in via the plain-HTML script tag
+in `index.html` (`/_vercel/insights/script.js`), not the `@vercel/analytics`
+npm package — this site has no bundler, so nothing would consume that
+package's `inject()` export. Confirmed live and serving the real script, not a
+404 or SPA fallback.
+
+## Open items — needs the client's copy, not another rewrite
+
+`build-brief.md` does not cover four sections that are already built and
+live. Each one is marked `DRAFT` in `index.html` (search for that string) so
+it's easy to find and swap without hunting:
+
+- **How I Work** (`#process`) — step descriptions are written, not from the
+  brief. Step names come from the supplied `process-*.png` filenames.
+- **Experience timeline** (inside `#about`) — mirrors the arc already in the
+  approved About paragraph. Deliberately asserts no dates, employers, or job
+  titles, since none exist anywhere in the brief.
+- **Agentic AI Systems card** — first sentence is the brief's approved copy
+  verbatim; the appended micro-SaaS sentence and the `Micro-SaaS Builds` tag
+  are not.
+- **Tools I Use** (`#tools`) is the one exception — every badge is an already-
+  approved service tag from `build-brief.md` §3, just regrouped. No invented
+  copy there.
+
+None of this is asserting anything false (no dates, no pricing, no fabricated
+history), but it was written to fill a gap, not transcribed from an approved
+source — flag it to the client before treating it as final.
