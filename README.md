@@ -150,16 +150,12 @@ lives under the `me-only10` team.
 ```bash
 git add -A && git commit -m "..."
 git push
-vercel --prod --yes
 ```
 
-Push and deploy are two separate steps right now — GitHub auto-deploy-on-push
-isn't wired up. The CLI's attempt to connect the repo failed because the
-Vercel account has no GitHub login connection yet, and that's a one-time
-authorization only the account owner can grant (Vercel dashboard → this
-project → **Settings → Git → Connect Repository** → authorize GitHub → pick
-`bhardwajvinayak068/vb-website`). Once done, `git push` alone triggers a
-deploy and the `vercel --prod` step above becomes unnecessary.
+GitHub auto-deploy-on-push is wired up — `bhardwajvinayak068/vb-website` is
+connected under **Settings → Git**, so `git push` alone ships to production.
+`vercel --prod --yes` still works as a manual fallback if a deploy needs
+retriggering without a new commit.
 
 **`.vercelignore` matters here.** The Vercel CLI does not read `.gitignore`
 for upload purposes. Without `.vercelignore` mirroring the same exclusions,
