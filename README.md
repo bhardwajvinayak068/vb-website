@@ -137,7 +137,7 @@ Set by the brief, do not undo without asking:
 
 | | |
 | --- | --- |
-| Live site | <https://vinayakbhardwaj.vercel.app/> |
+| Live site | <https://vinayakbhardwaj.com/> |
 | Vercel dashboard | <https://vercel.com/me-only10/vb-website> |
 | GitHub repo | <https://github.com/bhardwajvinayak068/vb-website> (public) |
 
