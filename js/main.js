@@ -19,6 +19,39 @@ function safely(name, fn) {
   try { fn(); } catch (err) { console.warn(`[vb] ${name} skipped:`, err); }
 }
 
+/* Coalesces bursts of calls (pointermove, etc.) to one fn per animation
+   frame. .cancel() drops a pending call, e.g. on pointerleave. */
+function rafThrottle(fn) {
+  let pending = null;
+  const wrapped = (...args) => {
+    if (pending) return;
+    pending = requestAnimationFrame(() => { pending = null; fn(...args); });
+  };
+  wrapped.cancel = () => { if (pending) { cancelAnimationFrame(pending); pending = null; } };
+  return wrapped;
+}
+
+/* Toggle-panel with the aria-expanded + Escape-closes + outside-click-closes
+   shape shared by the nav menu and the footer email reveal. onSet applies
+   whatever open/closed side effect that panel needs (data-open, hidden, …)
+   and returns the setOpen fn so the caller can drive it directly. */
+function dismissible(trigger, containerSelector, onSet) {
+  const setOpen = (open) => {
+    trigger.setAttribute('aria-expanded', String(open));
+    onSet(open);
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      trigger.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest(containerSelector)) setOpen(false);
+  });
+  return setOpen;
+}
+
 /* =============================================================================
    LOADER
    Covers the flash of unstyled content only — it never gates real page load,
@@ -57,27 +90,15 @@ safely('nav', () => {
   const menu   = document.getElementById('nav-menu');
   if (!toggle || !menu) return;
 
-  const setOpen = (open) => {
-    toggle.setAttribute('aria-expanded', String(open));
-    menu.toggleAttribute('data-open', open);
-  };
+  const setOpen = dismissible(toggle, '.nav', (open) => menu.toggleAttribute('data-open', open));
 
   toggle.addEventListener('click', () => {
     setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
 
-  // Close on navigation, on Escape, and on any click outside the panel.
+  // Close on navigation too, not just Escape/outside-click.
   menu.addEventListener('click', (e) => {
     if (e.target.closest('a')) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-      setOpen(false);
-      toggle.focus();
-    }
-  });
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.nav')) setOpen(false);
   });
 });
 
@@ -301,18 +322,16 @@ safely('char-scatter', () => {
   };
   const start = () => { if (raf === null) raf = requestAnimationFrame(tick); };
 
-  let pendingMove = null;
+  const onMove = rafThrottle((e) => {
+    const r = host.getBoundingClientRect(); // one read per frame, not per char
+    setTargets(e.clientX - r.left, e.clientY - r.top);
+    start();
+  });
   host.addEventListener('pointerenter', measure);
   host.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
     if (!centres) measure();
-    if (pendingMove) return;
-    pendingMove = requestAnimationFrame(() => {
-      pendingMove = null;
-      const r = host.getBoundingClientRect(); // one read per frame, not per char
-      setTargets(e.clientX - r.left, e.clientY - r.top);
-      start();
-    });
+    onMove(e);
   }, { passive: true });
   host.addEventListener('pointerleave', () => { tgtX.fill(0); tgtY.fill(0); near.fill(0); start(); });
 
@@ -328,25 +347,14 @@ safely('email-reveal', () => {
   const panel = document.getElementById('email-reveal');
   if (!btn || !panel) return;
 
-  const setOpen = (open) => {
-    btn.setAttribute('aria-expanded', String(open));
+  const setOpen = dismissible(btn, '.social--email', (open) => {
     panel.hidden = !open;
     panel.toggleAttribute('data-open', open);
-  };
+  });
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     setOpen(btn.getAttribute('aria-expanded') !== 'true');
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.social--email')) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-      setOpen(false);
-      btn.focus();
-    }
   });
 
   const copy = panel.querySelector('.email-reveal__copy');
@@ -474,8 +482,6 @@ safely('ambient-depth', () => {
     const nodes = [...ambient.querySelectorAll('.ambient__node')];
     if (!section || !glow || !grid || !nodesLayer) continue;
 
-    let pending = null;
-
     const reset = () => {
       glow.style.translate = '0 0';
       grid.style.setProperty('--tilt-y', '0deg');
@@ -484,31 +490,31 @@ safely('ambient-depth', () => {
       for (const n of nodes) n.removeAttribute('data-near');
     };
 
+    const onMove = rafThrottle((e) => {
+      const r = section.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+
+      glow.style.translate = `${(px * 10).toFixed(1)}px ${(py * 10).toFixed(1)}px`;
+      grid.style.setProperty('--tilt-y', `${(px * 6).toFixed(2)}deg`);
+      grid.style.setProperty('--tilt-x', `${(-py * 4).toFixed(2)}deg`);
+      nodesLayer.style.translate = `${(px * 26).toFixed(1)}px ${(py * 22).toFixed(1)}px`;
+
+      for (const n of nodes) {
+        const nr = n.getBoundingClientRect();
+        const dx = nr.left + nr.width / 2 - e.clientX;
+        const dy = nr.top + nr.height / 2 - e.clientY;
+        if (Math.hypot(dx, dy) < 100) n.setAttribute('data-near', '');
+        else n.removeAttribute('data-near');
+      }
+    });
+
     section.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' || pending) return;
-      pending = requestAnimationFrame(() => {
-        pending = null;
-        const r = section.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-
-        glow.style.translate = `${(px * 10).toFixed(1)}px ${(py * 10).toFixed(1)}px`;
-        grid.style.setProperty('--tilt-y', `${(px * 6).toFixed(2)}deg`);
-        grid.style.setProperty('--tilt-x', `${(-py * 4).toFixed(2)}deg`);
-        nodesLayer.style.translate = `${(px * 26).toFixed(1)}px ${(py * 22).toFixed(1)}px`;
-
-        for (const n of nodes) {
-          const nr = n.getBoundingClientRect();
-          const dx = nr.left + nr.width / 2 - e.clientX;
-          const dy = nr.top + nr.height / 2 - e.clientY;
-          if (Math.hypot(dx, dy) < 100) n.setAttribute('data-near', '');
-          else n.removeAttribute('data-near');
-        }
-      });
+      if (e.pointerType === 'mouse') onMove(e);
     }, { passive: true });
 
     section.addEventListener('pointerleave', () => {
-      if (pending) { cancelAnimationFrame(pending); pending = null; }
+      onMove.cancel();
       reset();
     });
   }
@@ -520,28 +526,26 @@ safely('card-tilt', () => {
   const MAX = 5; // degrees — restrained on purpose; the grid already reflows
 
   for (const card of document.querySelectorAll('.card')) {
-    let pending = null;
+    const onMove = rafThrottle((e) => {
+      const r = card.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+
+      const ax = -py, ay = px;              // rotation axis
+      const mag = Math.hypot(ax, ay);
+      if (mag < 0.004) { card.style.rotate = ''; return; }
+      card.style.rotate =
+        `${(ax / mag).toFixed(4)} ${(ay / mag).toFixed(4)} 0 ` +
+        `${(mag * MAX).toFixed(2)}deg`;
+    });
 
     card.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' || pending) return;
-      pending = requestAnimationFrame(() => {
-        pending = null;
-        const r = card.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-
-        const ax = -py, ay = px;              // rotation axis
-        const mag = Math.hypot(ax, ay);
-        if (mag < 0.004) { card.style.rotate = ''; return; }
-        card.style.rotate =
-          `${(ax / mag).toFixed(4)} ${(ay / mag).toFixed(4)} 0 ` +
-          `${(mag * MAX).toFixed(2)}deg`;
-      });
+      if (e.pointerType === 'mouse') onMove(e);
     }, { passive: true });
 
     card.addEventListener('pointerleave', () => {
-      if (pending) { cancelAnimationFrame(pending); pending = null; }
+      onMove.cancel();
       card.style.rotate = '';
     });
   }
