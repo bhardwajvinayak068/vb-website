@@ -1,6 +1,6 @@
 # VB — Growth, Engineered.
 
-> AI-driven websites, content, and automation systems, built by Vinayak Bhardwaj for businesses that want to move faster than their competition. Solo operator, single-page site, no build step.
+> AI-driven websites, content, and automation systems, built by Vinayak Bhardwaj for businesses that want to move faster than their competition. Solo operator, no build step.
 
 Vinayak Bhardwaj is an independent AI-driven growth operator. Website: https://vinayakbhardwaj.com/
 
@@ -15,6 +15,19 @@ Seven services, offered by one operator (see https://vinayakbhardwaj.com/#servic
 - Digital Marketing & SEO
 - Graphic Design
 - Agentic AI Systems (includes micro-SaaS builds)
+
+## Pricing
+
+Founding Partner Pricing (early-client rates), starting points per service —
+full tiers and exact figures at https://vinayakbhardwaj.com/pricing:
+
+- Website Creation: from RM1,500
+- Social Media Management: from RM1,200/mo
+- Social Media Ads: from RM600/mo (management fee, ad spend billed separately)
+- Digital Marketing & SEO: from RM1,000/mo
+- Content Creation: from RM150/video
+- Graphic Design: from RM60
+- Agentic AI Systems: quoted per scope, no fixed price — contact for a quote
 
 ## Process
 
@@ -33,6 +46,5 @@ Shipped work spans writing, video, and web design. See https://vinayakbhardwaj.c
 
 ## Notes
 
-- No pricing is published on the site; engagement starts with a call.
 - No testimonials or case studies are published yet.
-- This is a single-page site — all sections above are anchors on the same URL, not separate pages.
+- Two pages: the homepage (https://vinayakbhardwaj.com/) is anchor-linked sections; pricing (https://vinayakbhardwaj.com/pricing) is a separate page.

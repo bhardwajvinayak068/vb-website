@@ -633,7 +633,7 @@ safely('card-layout', async () => {
    ========================================================================== */
 safely('scroll-reveal', () => {
   const targets = [
-    ...document.querySelectorAll('.section__head, .card-slot, .proof, .shot, .self-callout, .about__body, .about__note, .about__portrait, .work__group-title, .timeline__item, .process__step, .tools__group'),
+    ...document.querySelectorAll('.section__head, .card-slot, .proof, .shot, .self-callout, .about__body, .about__note, .about__portrait, .work__group-title, .timeline__item, .process__step, .tools__group, .price-tile'),
   ];
   if (!motionOK()) return;
 
@@ -714,4 +714,39 @@ safely('cta-video', () => {
 safely('year', () => {
   const el = document.getElementById('year');
   if (el) el.textContent = String(new Date().getFullYear());
+});
+
+/* =============================================================================
+   PRICING PAGE — CURSOR GLOW
+   A soft blob eased toward the pointer, independent of the per-section
+   .ambient parallax. Only present on pricing.html (no-ops elsewhere since
+   #price-glow does not exist).
+   ========================================================================== */
+safely('price-glow', () => {
+  const glow = document.getElementById('price-glow');
+  if (!glow || !pointerOK()) return;
+
+  let target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  let current = { ...target };
+  let raf = null;
+
+  const apply = () => {
+    glow.style.left = `${current.x}px`;
+    glow.style.top = `${current.y}px`;
+  };
+  apply();
+
+  const tick = () => {
+    current.x += (target.x - current.x) * 0.16;
+    current.y += (target.y - current.y) * 0.16;
+    apply();
+    const settled = Math.abs(target.x - current.x) < 0.5 && Math.abs(target.y - current.y) < 0.5;
+    raf = settled ? null : requestAnimationFrame(tick);
+  };
+
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    target.x = e.clientX; target.y = e.clientY;
+    if (raf === null) raf = requestAnimationFrame(tick);
+  }, { passive: true });
 });

@@ -1474,6 +1474,126 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 [data-inview="in"] { opacity: 1; transform: none; }
 
 /* =============================================================================
+   PRICING PAGE
+   Tiles reuse the .card glass shell, icon treatment, and .tags pill component
+   as-is (see the .services__grid .card scoping note above) — only the tier
+   rows, the AI full-width tile, and the cursor-glow below are new. The
+   homepage's own price line on each service card (.card__price) lives here
+   too since it is the same feature, just surfaced in two places.
+   ========================================================================== */
+.card__price {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--green);
+  transition: color 220ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .card__price:hover { color: var(--green-hover); }
+}
+
+.price-hero__title { max-width: 22ch; }
+.price-hero__accent { color: var(--green); }
+
+.price-hero__sub {
+  color: var(--text-2);
+  max-width: 52ch;
+  margin-top: 0.85rem;
+}
+
+.price-hero__note {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  margin-top: 0.5rem;
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.price-tier {
+  padding-block: 0.8rem;
+  border-top: 1px solid var(--line);
+}
+.price-tier:first-of-type { margin-top: 0.2rem; }
+.price-tier__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+.price-tier__name { font-size: 0.84375rem; font-weight: 600; }
+.price-tier__price {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  color: var(--green);
+  white-space: nowrap;
+}
+.price-tier__desc { font-size: 0.8125rem; color: var(--text-2); line-height: 1.5; }
+
+.price-tile__cta { margin-top: 1.35rem; align-self: flex-start; }
+
+/* Agentic AI — the one contact-only, full-width tile */
+.price-tile--ai {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, var(--green-8), rgba(255, 255, 255, 0.03));
+  border-color: var(--green-35);
+}
+.price-tile--ai .card__icon { margin-bottom: 0; flex-shrink: 0; }
+.price-tile--ai__copy { flex: 1; }
+.price-tile--ai__copy .card__title { font-size: 1.25rem; margin-bottom: 0.3rem; }
+.price-tile--ai__copy p { color: var(--text-2); font-size: 0.875rem; max-width: 480px; }
+.price-tile--ai .price-tile__cta { margin-top: 0; flex-shrink: 0; }
+
+.price-footnote {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  max-width: 68ch;
+  line-height: 1.6;
+}
+.price-footnote strong { color: var(--text-2); }
+
+.price-cta {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(2rem, 4vw, 2.75rem);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  text-align: center;
+}
+.price-cta__title { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem); }
+.price-cta__sub { margin: 0.6rem auto 1.75rem; color: var(--text-2); max-width: 40ch; }
+
+/* Cursor-follow glow, present only on this page. transform stays a static
+   centring offset; JS drives left/top only, so the two never fight over the
+   same property — same trick .rotate/.transform use elsewhere in this file. */
+#price-glow {
+  position: fixed;
+  left: 0; top: 0;
+  width: 420px; height: 420px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+  filter: blur(40px);
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =============================================================================
    RESPONSIVE — mobile and tablet are laid out for their own shape, not scaled
    down from desktop.
    ========================================================================== */
@@ -1490,6 +1610,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .work__row--3 > :last-child { grid-column: span 2; }
 
   .process__grid { grid-template-columns: repeat(2, 1fr); }
+
+  .price-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---- mobile -------------------------------------------------------------- */
@@ -1560,7 +1682,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .card-slot[data-row="1"],
   .card-slot[data-row="2"],
   .card-slot:last-child { grid-column: 1 / -1; }
-  .card {
+  /* scoped to the homepage bento grid only — the pricing page reuses .card's
+     glass shell but keeps its own flex-column layout at every width, since it
+     has no .card__desc to anchor this icon+title/desc/tags area map */
+  .services__grid .card {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-areas:
@@ -1586,6 +1711,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   /* --- footer --- */
   .footer__inner { flex-direction: column; align-items: center; text-align: center; }
   .socials { gap: 1.75rem; }
+
+  /* --- pricing --- */
+  .price-grid { grid-template-columns: 1fr; }
+  .price-tile--ai { flex-direction: column; align-items: flex-start; }
 }
 
 @media (max-width: 420px) {
@@ -1609,6 +1738,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   }
 
   .cursor-trail { display: none; }
+  #price-glow { display: none; }
 
   [data-inview] { opacity: 1; transform: none; }
 
@@ -1620,6 +1750,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* Touch devices have no cursor to trail. */
 @media (hover: none), (pointer: coarse) {
   .cursor-trail { display: none; }
+  #price-glow { display: none; }
   /* clear of the hero copy, which is pulled up over the base of the portrait */
   .hero__reveal-hint { display: block; bottom: 5rem; }
 }
